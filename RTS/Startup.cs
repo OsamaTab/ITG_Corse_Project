@@ -12,6 +12,8 @@ using RTS.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RTS.DataAccess.Data;
+using RTS.DataAccess.Logic.RTSEntities;
 
 namespace RTS
 {
@@ -27,11 +29,18 @@ namespace RTS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<RTSDBContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
+            //    .AddEntityFrameworkStores<RTSDBContext>();
+
+            services.AddDefaultIdentity<Employee>(options => {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.User.RequireUniqueEmail = true;
+            })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<RTSDBContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
