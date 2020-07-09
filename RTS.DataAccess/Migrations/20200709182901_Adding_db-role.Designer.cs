@@ -10,8 +10,8 @@ using RTS.DataAccess.Data;
 namespace RTS.DataAccess.Migrations
 {
     [DbContext(typeof(RTSDBContext))]
-    [Migration("20200709151637_Adding_Db")]
-    partial class Adding_Db
+    [Migration("20200709182901_Adding_db-role")]
+    partial class Adding_dbrole
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,6 +46,20 @@ namespace RTS.DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "85abf0d4-d9df-4692-a96f-0ae2a4c6b48a",
+                            ConcurrencyStamp = "c6bc4f23-9698-4629-9a74-1a52ac5c443b",
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = "d47e176a-151d-4b49-bc7e-a8536c6de91f",
+                            ConcurrencyStamp = "1789961f-6a68-4fee-a9dc-27a80f907e8b",
+                            Name = "Employee"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -322,6 +336,23 @@ namespace RTS.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RequestStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Status = "approved"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Status = "pending"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Status = "rejected"
+                        });
                 });
 
             modelBuilder.Entity("RTS.DataAccess.Logic.RTSEntities.Trnasaction", b =>

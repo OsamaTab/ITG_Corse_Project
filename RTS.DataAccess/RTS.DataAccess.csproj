@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20200709142604_Adding_Db.Designer.cs" />
     <Compile Remove="Migrations\20200709145829_Adding_Db_ON_DELETE_NO_ACTION.cs" />
     <Compile Remove="Migrations\20200709145829_Adding_Db_ON_DELETE_NO_ACTION.Designer.cs" />
+    <Compile Remove="Migrations\20200709151637_Adding_Db.cs" />
+    <Compile Remove="Migrations\20200709151637_Adding_Db.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

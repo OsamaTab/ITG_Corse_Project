@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RTS.DataAccess.Migrations
 {
-    public partial class Adding_Db : Migration
+    public partial class Adding_db : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -272,6 +272,21 @@ namespace RTS.DataAccess.Migrations
                         onDelete: ReferentialAction.NoAction,
                         onUpdate:ReferentialAction.NoAction);
                 });
+
+            migrationBuilder.InsertData(
+                table: "RequestStatuses",
+                columns: new[] { "Id", "Status" },
+                values: new object[] { 1, "approved" });
+
+            migrationBuilder.InsertData(
+                table: "RequestStatuses",
+                columns: new[] { "Id", "Status" },
+                values: new object[] { 2, "pending" });
+
+            migrationBuilder.InsertData(
+                table: "RequestStatuses",
+                columns: new[] { "Id", "Status" },
+                values: new object[] { 3, "rejected" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

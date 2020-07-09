@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RTS.DataAccess.Logic.RTSEntities;
 using System;
@@ -20,12 +21,22 @@ namespace RTS.DataAccess.Data
         public DbSet<ItemRequest> itemRequests { get; set; }
         public DbSet<RequestStatus> RequestStatuses { get; set; }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder) { 
-        //    base . OnModelCreating(modelBuilder);
-                    
-        //    foreach (var foreignKey in modelBuilder.Model.GetEntityTypes( )
-        //    .SelectMany(e => e.GetForeignKeys( ) ) )
-        //    foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
-        //    }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            //foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
+            //.SelectMany(e => e.GetForeignKeys()))
+            //    foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
+            modelBuilder.Entity<RequestStatus>().HasData(
+               new RequestStatus() { Id = 1, Status = "approved" },
+               new RequestStatus() { Id = 2, Status = "pending" },
+               new RequestStatus() { Id = 3, Status = "rejected" });
+
+            modelBuilder.Entity<IdentityRole>().HasData(
+               new IdentityRole() { Name = "Admin" },
+               new IdentityRole() { Name = "Employee" }
+               );
+        }
     }
 }
