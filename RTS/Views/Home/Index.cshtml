@@ -1,4 +1,9 @@
-﻿@model IEnumerable<RTS.DataAccess.Logic.RTSEntities.Item>
+﻿@using Microsoft.AspNetCore.Identity
+
+@model RTS.BusinessLogic.ViewModel.ItemViewModel
+@inject SignInManager<RTS.DataAccess.Logic.RTSEntities.Employee> SignInManager
+
+
 
 @{
     ViewData["Title"] = "Index";
@@ -8,6 +13,7 @@
     .container {
         max-width: 100%;
     }
+
     .thank-you-pop {
         width: 100%;
         padding: 20px;
@@ -84,16 +90,16 @@
             }
             else if (ViewBag.message == "Failed")
             {
-        <div class="alert alert-danger">
-            <strong>Error!</strong> Email have not been sended.
-        </div>
+                <div class="alert alert-danger">
+                    <strong>Error!</strong> Email have not been sended.
+                </div>
             }
         </div>
         <div class="card-body">
             <form asp-controller="Home" asp-action="Index">
                 <p class="row">
                     <input class="form-control col-7" type="text" name="search" placeholder="Search By Name">
-                    <input class="ml-2 btn badge-dark" type="submit" value="Search" />
+                    <input class="ml-2 btn btn-primary" type="submit" value="Search" />
                 </p>
             </form>
             <div class="p-0 mx-0 row">
@@ -107,39 +113,37 @@
                                 Row
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.DeviceType)
+                                Device Type
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Name)
+                                Item Name
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Description)
+                                Description
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Manufacturer)
+                                Manufacturer
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Model)
+                                Model
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.SerialNumber)
+                                SerialNumber
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.IsActive)
+                                Owner
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.CurentUser)
+                                PurchaseDate
                             </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.PurchaseDate)
-                            </th>
+                            
                             <th>
                                 Request
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.items)
                         {
 
                             <tr>
@@ -162,9 +166,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.SerialNumber)
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.IsActive)
-                                </td>
+                               
                                 <td>
                                     @Html.DisplayFor(modelItem => item.CurentUser.UserName)
                                 </td>
@@ -187,7 +189,7 @@
                                         <input type="hidden" asp-for="@item.IsDeleted" />
 
 
-                                        <input type="submit" value="Request" class="btn btn-link btn-sm p-0" />
+                                        <input type="submit" value="Request" class="btn btn-primary" />
                                     </form>
                                 </td>
                             </tr>
@@ -199,76 +201,92 @@
     </div>
 
 
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="card h-100 col-md-3">
+            <div class="card-body">
+                @if (ViewBag.message == "returned")
+                {
+                    <div class="alert alert-success">
+                        <strong>Success!</strong> Item return successfuly.
+                    </div>
 
-    <div class="card h-100 col-md-3">
-        <div class="card-body">
-            @if (ViewBag.message == "returned")
-            {
-                <div class="alert alert-success">
-                    <strong>Success!</strong> Item return successfuly.
+                }
+
+                <div class="p-0 mx-0 row">
+                    <h3 class="card-title ">Your Devices</h3>
                 </div>
-
-            }
-
-            <div class="p-0 mx-0 row">
-                <h3 class="card-title ">Your Devices</h3>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.DeviceType)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Name)
-                            </th>
-                            <th>
-                                Return
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
                             <tr>
-
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-
-                                </td>
-
-                                <td>
-                                    <form class="d-inline-flex" asp-action="Return" asp-route-id="@item.Id">
-                                        <input type="submit" value="Return" class="btn btn-link btn-sm p-0" />
-                                    </form>
-                                </td>
+                                <th>
+                                    Device Type
+                                </th>
+                                <th>
+                                    Item Name
+                                </th>
+                                <th>
+                                    Return
+                                </th>
                             </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.Devices)
+                            {
+
+                                <tr>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DeviceType.Type)
+
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+
+                                    </td>
+
+                                    <td>
+                                        <form class="d-inline-flex" asp-action="Return" asp-route-id="@item.Id">
+                                            <input type="hidden" asp-for="@item.Id" />
+                                            <input type="hidden" asp-for="@item.Name" />
+                                            <input type="hidden" asp-for="@item.SerialNumber" />
+                                            <input type="hidden" asp-for="@item.CurentUserId" />
+                                            <input type="hidden" asp-for="@item.DeviceTypeId" />
+                                            <input type="hidden" asp-for="@item.Description" />
+                                            <input type="hidden" asp-for="@item.Manufacturer" />
+                                            <input type="hidden" asp-for="@item.Description" />
+                                            <input type="hidden" asp-for="@item.Model" />
+                                            <input type="hidden" asp-for="@item.PurchaseDate" />
+                                            <input type="hidden" asp-for="@item.IsActive" />
+                                            <input type="hidden" asp-for="@item.IsDeleted" />
+                                            <input type="submit" value="Return" class="btn btn-primary " />
+
+                                        </form>
+                                    </td>
+                                </tr>
 
 
-                        }
-                    </tbody>
-                </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    }
 </div>
 
-    
 
 
-    <script>
 
-        var table = document.getElementsByTagName('table')[0],
-            rows = table.getElementsByTagName('tr'),
-            text = 'textContent' in document ? 'textContent' : 'innerText';
+<script>
 
-        for (var i = 1, len = rows.length; i < len; i++) {
-            rows[i].children[0][text] = i + '' + rows[i].children[0][text];
-        }
-    </script>
+    var table = document.getElementsByTagName('table')[0],
+        rows = table.getElementsByTagName('tr'),
+        text = 'textContent' in document ? 'textContent' : 'innerText';
+
+    for (var i = 1, len = rows.length; i < len; i++) {
+        rows[i].children[0][text] = i + '' + rows[i].children[0][text];
+    }
+</script>

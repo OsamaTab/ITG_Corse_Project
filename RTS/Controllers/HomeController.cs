@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RTS.BusinessLogic.IServices;
+using RTS.BusinessLogic.ViewModel;
 using RTS.DataAccess.Logic.RTSEntities;
 using RTS.Models;
 
@@ -37,12 +38,19 @@ namespace RTS.Controllers
                 TempData.Remove("status");
             }
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if(user != null)
+           ;
+            var item =_itemServices.GetItemsByName(search);
+            var it = new ItemViewModel()
+            {
+                items = item,
+                
+            };
+            if (user != null)
             {
                 var userItems = _itemServices.GetItemsByUser(user);
+                it.Devices = userItems;
             }
-            var item =_itemServices.GetItemsByName(search);
-            return View(item);
+            return View(it);
         }
 
         [HttpPost]
@@ -58,6 +66,7 @@ namespace RTS.Controllers
             var itemUser = await _userManager.FindByIdAsync(item.CurentUserId);
             if (await _userManager.IsInRoleAsync(user, "Employee") && itemUser.Email != "admin@i.com" && itemUser.Email != null)
             {
+
                Boolean result= _itemRequestService.RequestItem(itemUser);
                 if (result)
                 {

@@ -22,6 +22,7 @@ namespace RTS.BusinessLogic.Data
                 mm.Subject = subject;
 
                 mm.From = new MailAddress("projectmail9990@gmail.com");
+                mm.Body = "<h1 style='color: red'>test<h1>";
                 mm.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com");
                 smtp.Port = 587;
