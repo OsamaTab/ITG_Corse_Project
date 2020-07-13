@@ -14,6 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RTS.DataAccess.Data;
 using RTS.DataAccess.Logic.RTSEntities;
+using RTS.BusinessLogic.IServices;
+
+
 
 namespace RTS
 {
@@ -32,9 +35,7 @@ namespace RTS
             services.AddDbContext<RTSDBContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<RTSDBContext>();
-
+ 
             services.AddDefaultIdentity<Employee>(options => {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.User.RequireUniqueEmail = true;
@@ -42,11 +43,16 @@ namespace RTS
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<RTSDBContext>();
             services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddTransient<IItemCategorieService, BusinessLogic.Data.DBItemCategorie>();
+            services.AddTransient<IAccountService, BusinessLogic.Data.DBAccount>();
+            services.AddTransient<IItemService, BusinessLogic.Data.DBItem>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<Employee> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -59,6 +65,7 @@ namespace RTS
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            ApplicationDbInitializer.SeedUsers(userManager);
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -70,9 +77,13 @@ namespace RTS
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                     name: "Admin",
+                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+
             });
         }
     }

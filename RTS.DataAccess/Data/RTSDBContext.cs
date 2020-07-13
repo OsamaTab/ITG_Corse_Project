@@ -34,8 +34,8 @@ namespace RTS.DataAccess.Data
                new RequestStatus() { Id = 3, Status = "rejected" });
 
             modelBuilder.Entity<IdentityRole>().HasData(
-               new IdentityRole() { Name = "Admin" },
-               new IdentityRole() { Name = "Employee" }
+               new IdentityRole() { Name = "Admin" , NormalizedName = "Admin".ToUpper() },
+               new IdentityRole() { Name = "Employee",NormalizedName = "Employee".ToUpper() }
                );
         }
     }

@@ -9,7 +9,7 @@ using RTS.Models;
 
 namespace RTS.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -17,7 +17,6 @@ namespace RTS.Controllers
         {
             _logger = logger;
         }
-
         public IActionResult Index()
         {
             return View();

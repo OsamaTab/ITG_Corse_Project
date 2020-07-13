@@ -1,0 +1,80 @@
+﻿@model IEnumerable<RTS.DataAccess.Logic.RTSEntities.Trnasaction>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-md-12 grid-margin">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="font-weight-bold mb-0">Trnasaction</h4>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <div class="card h-100 mx-2">
+            <div class="card-body">
+                <div class="p-0 mx-0 row">
+                    <h3 class="card-title col-md-12">Transections</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Row
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DeviceType)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Item)
+                                </th>
+                                <th>
+                                    Recustid User
+                                </th>
+                                <th>
+                                    givin User
+                                </th>
+                                <th>
+                                    Transection Date
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @*@foreach (var item in Model)
+                            {
+
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DeviceType.Type)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Item.Item)
+                                    </td>
+                                  
+                                </tr>
+                            }*@
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
