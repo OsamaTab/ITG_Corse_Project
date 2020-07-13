@@ -26,6 +26,20 @@ namespace RTS.BusinessLogic.Data
             var item = _context.Items.Include(i => i.CurentUser).Include(i => i.DeviceType);
             return item.ToList();
         }
+
+        public List<Item> GetItemsByName(string search)
+        {
+            var item = from m in _context.Items.Include(i => i.CurentUser).Include(i => i.DeviceType)
+                       select m;
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                item = item.Include(i => i.CurentUser).Include(i => i.DeviceType).Where(s => s.Name.Contains(search));
+            }
+
+            return item.ToList();
+        }
+
         public async Task Create(Item item)
         {
             item.PurchaseDate = DateTime.Now;
@@ -46,5 +60,6 @@ namespace RTS.BusinessLogic.Data
             await _context.SaveChangesAsync();
 
         }
+
     }
 }
