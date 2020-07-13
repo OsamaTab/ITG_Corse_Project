@@ -12,6 +12,8 @@ namespace RTS.BusinessLogic.IServices
     {
         public List<IdentityRole> GetRole();
         public Task<List<UserViewModel>> GetEmployee();
+        public Task<List<UserViewModel>> GetDeletedEmployee();
+
         public Task Edit(string userId, UserViewModel model);
         public Task Delete(string id);
     }

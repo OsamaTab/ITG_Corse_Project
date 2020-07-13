@@ -4,9 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
-<a class="btn btn-primary my-2 mx-2" style="width:10%" asp-action="Create">Create New</a>
 
-<div class="card h-100 mx-2">
+<div class="card h-100 m-2">
     <div class="card-body">
         <div class="p-0 mx-0 row">
             <h3 class="card-title col-md-8">Items</h3>
@@ -54,43 +53,39 @@
                     @foreach (var item in Model)
                     {
 
-                    <tr>
-                        <td></td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DeviceType.Type)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Manufacturer)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Model)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.SerialNumber)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.IsActive)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CurentUser.UserName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PurchaseDate)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <form class="d-inline-flex" asp-action="Delete" asp-route-id="@item.Id">
-
-                                <input type="submit" value="Delete" class="btn btn-link btn-sm p-0" />
-                            </form>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DeviceType.Type)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Manufacturer)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Model)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SerialNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CurentUser.UserName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PurchaseDate)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>

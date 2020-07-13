@@ -23,7 +23,12 @@ namespace RTS.BusinessLogic.Data
 
         public List<Item> GetItems()
         {
-            var item = _context.Items.Include(i => i.CurentUser).Include(i => i.DeviceType);
+            var item = _context.Items.Include(i => i.CurentUser).Include(i => i.DeviceType).Where(d=>d.IsDeleted==false);
+            return item.ToList();
+        }
+        public List<Item> GetDeletedItems()
+        {
+            var item = _context.Items.Include(i => i.CurentUser).Include(i => i.DeviceType).Where(d => d.IsDeleted == true);
             return item.ToList();
         }
 
@@ -56,7 +61,7 @@ namespace RTS.BusinessLogic.Data
         public async Task Delete(int id)
         {
             var item = await _context.Items.FindAsync(id);
-            _context.Items.Remove(item);
+            item.IsDeleted = true;
             await _context.SaveChangesAsync();
 
         }

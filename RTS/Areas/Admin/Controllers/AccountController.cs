@@ -34,6 +34,12 @@ namespace RTS.Areas.Admin.Controllers
 
             return View("Areas/Admin/Views/Account/Index.cshtml", model);
         }
+        public async Task<IActionResult> Deleted()
+        {
+            var model = await _accountService.GetDeletedEmployee();
+
+            return View( model);
+        }
 
         [HttpGet]
         public async Task<IActionResult> Edit(string? id)
@@ -49,6 +55,7 @@ namespace RTS.Areas.Admin.Controllers
             {
                 UserId = user.Id,
                 UserName = user.Email,
+                IsDeleted=user.IsDeleted
 
             };
             return View(model);

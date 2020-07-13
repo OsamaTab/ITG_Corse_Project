@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
@@ -20,6 +21,8 @@ namespace RTS.DataAccess.Logic.RTSEntities
         public string Model { get; set; }
         public int SerialNumber { get; set; }
         public Boolean IsActive { get; set; }
+        [DefaultValue("False")]
+        public Boolean IsDeleted { get; set; }
         public string CurentUserId { get; set; }
 
         [ForeignKey("CurentUserId")]

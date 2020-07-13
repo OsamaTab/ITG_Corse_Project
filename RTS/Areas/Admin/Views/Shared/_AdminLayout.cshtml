@@ -167,8 +167,12 @@
                         </a>
                         <div class="collapse hide" id="ui-basic">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link"  asp-action="Index" asp-controller="Item">Items</a></li>
-                                <li class="nav-item"> <a class="nav-link"  asp-action="Index" asp-controller="ItemCategorie">ItemCategorie</a></li>
+                                <li class="nav-item"> <a class="nav-link" asp-action="Index" asp-controller="Item">Items</a></li>
+                                <li class="nav-item"> <a class="nav-link" asp-action="Deleted" asp-controller="Item">DeletedItems</a></li>
+
+                                <li class="nav-item"> <a class="nav-link" asp-action="Index" asp-controller="ItemCategorie">ItemCategorie</a></li>
+                                <li class="nav-item"> <a class="nav-link" asp-action="Deleted" asp-controller="ItemCategorie">DeletedItemCategorie</a></li>
+
                             </ul>
                         </div>
                     </li>
@@ -180,8 +184,10 @@
                         </a>
                         <div class="collapse hide" id="ui-basic1">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link"  asp-action="Index" asp-controller="Role">Roles</a></li>
-                                <li class="nav-item"> <a class="nav-link"  asp-action="Index" asp-controller="Account">Users</a></li>
+                                <li class="nav-item"> <a class="nav-link" asp-action="Index" asp-controller="Role">Roles</a></li>
+                                <li class="nav-item"> <a class="nav-link" asp-action="Index" asp-controller="Account">Users</a></li>
+                                <li class="nav-item"> <a class="nav-link" asp-action="Deleted" asp-controller="Account">DeletedUsers</a></li>
+
                             </ul>
                         </div>
                     </li>

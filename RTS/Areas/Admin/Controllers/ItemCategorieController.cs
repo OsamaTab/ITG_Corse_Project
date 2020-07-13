@@ -26,6 +26,12 @@ namespace RTS.Areas.Admin.Controllers
 
             return View("Areas/Admin/Views/ItemCategorie/Index.cshtml",model);
         }
+        public async Task<IActionResult> Deleted()
+        {
+            var model = _itemCategorieService.GetDeletedItemCategories();
+
+            return View(model);
+        }
 
         public IActionResult Create()
         {
@@ -61,7 +67,7 @@ namespace RTS.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Type")] ItemCategorie itemCategorie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,IsDeleted")] ItemCategorie itemCategorie)
         {
             if (id != itemCategorie.Id)
             {
@@ -88,24 +94,6 @@ namespace RTS.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(itemCategorie);
-        }
-
-      
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var itemCategorie = await _context.itemCategories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (itemCategorie == null)
-            {
-                return NotFound();
-            }
-
-            return View("Areas/Admin/Views/ItemCategorie/Delete.cshtml", itemCategorie);
         }
 
    

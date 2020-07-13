@@ -9,6 +9,7 @@ namespace RTS.BusinessLogic.IServices
     public interface IItemService
     {
         public List<Item> GetItems();
+        public List<Item> GetDeletedItems();
         public List<Item> GetItemsByName(string search);
         public Task Create(Item item);
         public Task Edit(Item item);

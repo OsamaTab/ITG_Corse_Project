@@ -9,7 +9,7 @@ namespace RTS.BusinessLogic.IServices
     public interface IItemCategorieService
     {
         public List<ItemCategorie> GetItemCategories();
-
+        public List<ItemCategorie> GetDeletedItemCategories();
         public Task Create(ItemCategorie itemCategorie);
         public Task Edit(ItemCategorie itemCategorie);
         public Task Delete(int id);

@@ -33,6 +33,11 @@ namespace RTS.Areas.Admin.Controllers
             var item = _itemServices.GetItems() ;
             return View(item);
         }
+        public async Task<IActionResult> Deleted()
+        {
+            var item = _itemServices.GetDeletedItems();
+            return View(item);
+        }
 
         public IActionResult Create()
         {
@@ -76,7 +81,7 @@ namespace RTS.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DeviceTypeId,Name,Description,Manufacturer,Model,SerialNumber,IsActive,CurentUserId,PurchaseDate")] Item item)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DeviceTypeId,Name,Description,Manufacturer,Model,SerialNumber,IsActive,IsDeleted,CurentUserId,PurchaseDate")] Item item)
         {
             if (id != item.Id)
             {
@@ -105,29 +110,9 @@ namespace RTS.Areas.Admin.Controllers
             return View(item);
         }
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var item = await _context.Items
-                .Include(i => i.CurentUser)
-                .Include(i => i.DeviceType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (item == null)
-            {
-                return NotFound();
-            }
-
-            return View(item);
-        }
-
-        // POST: Admin/Item/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             await _itemServices.Delete(id);
             return RedirectToAction(nameof(Index));

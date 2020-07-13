@@ -4,9 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<a class="btn btn-primary my-2 mx-2" style="width:10%" asp-action="Create">Create New</a>
-
-<div class="card h-100 mx-2">
+<div class="card h-100 m-2">
     <div class="card-body">
         <div class="p-0 mx-0 row">
             <h3 class="card-title col-md-8">PostTypes</h3>
@@ -36,11 +34,7 @@
                                 @Html.DisplayFor(modelItem => item.Type)
                             </td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                <form class="d-inline-flex" asp-action="Delete" asp-route-id="@item.Id">
-
-                                    <input type="submit" value="Delete" class="btn btn-link btn-sm p-0" />
-                                </form>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                             </td>
                         </tr>
                     }

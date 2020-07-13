@@ -49,6 +49,11 @@
                                 <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
                             </label>
                         </div>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+                            </label>
+                        </div>
                         <input type="hidden" asp-for="CurentUserId" />
                         <input type="hidden" asp-for="PurchaseDate" />
 

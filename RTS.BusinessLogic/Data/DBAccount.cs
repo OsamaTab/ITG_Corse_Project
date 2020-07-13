@@ -15,12 +15,14 @@ namespace RTS.BusinessLogic.Data
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<Employee> _userManager;
+        private readonly RTSDBContext _context;
 
 
-        public DBAccount(RoleManager<IdentityRole> roleManager, UserManager<Employee> userManager)
+        public DBAccount(RoleManager<IdentityRole> roleManager, UserManager<Employee> userManager, RTSDBContext context)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _context = context;
         }
 
 
@@ -31,20 +33,48 @@ namespace RTS.BusinessLogic.Data
 
             foreach (var user in _userManager.Users)
             {
-                var userRole = new UserViewModel
+                if (user.IsDeleted == false)
                 {
-                    UserId = user.Id,
-                    UserName = user.Email
-                };
-                foreach (var role in _roleManager.Roles)
-                {
-                    if (await _userManager.IsInRoleAsync(user, role.Name))
+                    var userRole = new UserViewModel
                     {
-                        userRole.RoleName = role.Name;
-                        userRole.RoleId = role.Id;
+                        UserId = user.Id,
+                        UserName = user.Email
+                    };
+                    foreach (var role in _roleManager.Roles)
+                    {
+                        if (await _userManager.IsInRoleAsync(user, role.Name))
+                        {
+                            userRole.RoleName = role.Name;
+                            userRole.RoleId = role.Id;
+                        }
                     }
+                    model.Add(userRole);
                 }
-                model.Add(userRole);
+            }
+            return model.ToList();
+        }
+        public async Task<List<UserViewModel>> GetDeletedEmployee()
+        {
+            var model = new List<UserViewModel>();
+            foreach (var user in _userManager.Users)
+            {
+                if (user.IsDeleted == true)
+                {
+                    var userRole = new UserViewModel
+                    {
+                        UserId = user.Id,
+                        UserName = user.Email
+                    };
+                    foreach (var role in _roleManager.Roles)
+                    {
+                        if (await _userManager.IsInRoleAsync(user, role.Name))
+                        {
+                            userRole.RoleName = role.Name;
+                            userRole.RoleId = role.Id;
+                        }
+                    }
+                    model.Add(userRole);
+                }
             }
             return model.ToList();
         }
@@ -59,6 +89,7 @@ namespace RTS.BusinessLogic.Data
             var user = await _userManager.FindByIdAsync(userId);
             var role = await _roleManager.FindByIdAsync(model.RoleId);
             user.Email = model.UserName;
+            user.IsDeleted = model.IsDeleted;
             IdentityResult result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
@@ -68,7 +99,8 @@ namespace RTS.BusinessLogic.Data
         public async Task Delete(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            await _userManager.DeleteAsync(user);
+            user.IsDeleted = true;
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace RTS.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles ="Admin")]
     public class BaseController : Controller
     {
         
