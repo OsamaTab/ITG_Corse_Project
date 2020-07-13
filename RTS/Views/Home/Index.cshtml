@@ -3,137 +3,266 @@
 @{
     ViewData["Title"] = "Index";
 }
+<style>
+    /*--thank you pop starts here--*/
+    .container {
+        max-width: 100%;
+    }
+    .thank-you-pop {
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+    }
 
-    <div class="row w-100">
-        <div class="card h-100 mx-5 col-md-8">
-            <div class="card-body">
-                <form asp-controller="Home" asp-action="Index">
-                    <p class="row">
-                        <input class="form-control col-7" type="text" name="search" placeholder="Search By Name">
-                        <input class="ml-2 btn badge-dark" type="submit" value="Search" />
-                    </p>
-                </form>
-                <div class="p-0 mx-0 row">
-                    <h3 class="card-title ">Items</h3>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Row
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.DeviceType)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Name)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Description)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Manufacturer)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Model)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.SerialNumber)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.IsActive)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.CurentUser)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.PurchaseDate)
-                                </th>
-                                <th>
-                                    Request
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
+        .thank-you-pop img {
+            width: 76px;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+            margin-bottom: 25px;
+        }
 
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DeviceType.Type)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Manufacturer)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Model)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.SerialNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.IsActive)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.CurentUser.UserName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PurchaseDate)
-                                    </td>
-                                    <td>
-                                        <a asp-action="" asp-route-id="">Request</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+        .thank-you-pop h1 {
+            font-size: 42px;
+            margin-bottom: 25px;
+            color: #5C5C5C;
+        }
+
+        .thank-you-pop p {
+            font-size: 20px;
+            margin-bottom: 27px;
+            color: #5C5C5C;
+        }
+
+        .thank-you-pop h3.cupon-pop {
+            font-size: 25px;
+            margin-bottom: 40px;
+            color: #222;
+            display: inline-block;
+            text-align: center;
+            padding: 10px 20px;
+            border: 2px dashed #222;
+            clear: both;
+            font-weight: normal;
+        }
+
+            .thank-you-pop h3.cupon-pop span {
+                color: #03A9F4;
+            }
+
+        .thank-you-pop a {
+            display: inline-block;
+            margin: 0 auto;
+            padding: 9px 20px;
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 14px;
+            background-color: #8BC34A;
+            border-radius: 17px;
+        }
+
+            .thank-you-pop a i {
+                margin-right: 5px;
+                color: #fff;
+            }
+
+    #ignismyModal .modal-header {
+        border: 0px;
+    }
+    /*--thank you pop ends here--*/
+
+</style>
+<div class="row w-100">
+    <div class="card h-100 mx-5 col-md-8">
+        <div class="p-0">
+            @if (ViewBag.message == "Success")
+            {
+                <div class="alert alert-success">
+                    <strong>Success!</strong> Email have been send.
                 </div>
-            </div>
+
+            }
+            else if (ViewBag.message == "Failed")
+            {
+        <div class="alert alert-danger">
+            <strong>Error!</strong> Email have not been sended.
         </div>
-        <div class="card h-100 col-md-3">
-            <div class="card-body">
-                <div class="p-0 mx-0 row">
-                    <h3 class="card-title ">Your Devices</h3>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Row
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.DeviceType)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Name)
-                                </th>
-                               
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
+            }
+        </div>
+        <div class="card-body">
+            <form asp-controller="Home" asp-action="Index">
+                <p class="row">
+                    <input class="form-control col-7" type="text" name="search" placeholder="Search By Name">
+                    <input class="ml-2 btn badge-dark" type="submit" value="Search" />
+                </p>
+            </form>
+            <div class="p-0 mx-0 row">
+                <h3 class="card-title ">Items</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Row
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DeviceType)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Manufacturer)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Model)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SerialNumber)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsActive)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CurentUser)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PurchaseDate)
+                            </th>
+                            <th>
+                                Request
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
 
-                                <tr>
-                                  
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DeviceType.Type)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Manufacturer)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SerialNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IsActive)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CurentUser.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PurchaseDate)
+                                </td>
+                                <td>
+                                    <form class="d-inline-flex" asp-action="SendMail" asp-route-id="@item.Id">
+                                        <input type="hidden" asp-for="@item.Id" />
+                                        <input type="hidden" asp-for="@item.Name" />
+                                        <input type="hidden" asp-for="@item.SerialNumber" />
+                                        <input type="hidden" asp-for="@item.CurentUserId" />
+                                        <input type="hidden" asp-for="@item.DeviceTypeId" />
+                                        <input type="hidden" asp-for="@item.Description" />
+                                        <input type="hidden" asp-for="@item.Manufacturer" />
+                                        <input type="hidden" asp-for="@item.Description" />
+                                        <input type="hidden" asp-for="@item.Model" />
+                                        <input type="hidden" asp-for="@item.PurchaseDate" />
+                                        <input type="hidden" asp-for="@item.IsActive" />
+                                        <input type="hidden" asp-for="@item.IsDeleted" />
+
+
+                                        <input type="submit" value="Request" class="btn btn-link btn-sm p-0" />
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-<script>
+
+
+
+    <div class="card h-100 col-md-3">
+        <div class="card-body">
+            @if (ViewBag.message == "returned")
+            {
+                <div class="alert alert-success">
+                    <strong>Success!</strong> Item return successfuly.
+                </div>
+
+            }
+
+            <div class="p-0 mx-0 row">
+                <h3 class="card-title ">Your Devices</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DeviceType)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                Return
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+
+                            <tr>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+
+                                </td>
+
+                                <td>
+                                    <form class="d-inline-flex" asp-action="Return" asp-route-id="@item.Id">
+                                        <input type="submit" value="Return" class="btn btn-link btn-sm p-0" />
+                                    </form>
+                                </td>
+                            </tr>
+
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+    <script>
 
         var table = document.getElementsByTagName('table')[0],
             rows = table.getElementsByTagName('tr'),
@@ -142,4 +271,4 @@
         for (var i = 1, len = rows.length; i < len; i++) {
             rows[i].children[0][text] = i + '' + rows[i].children[0][text];
         }
-</script>
+    </script>

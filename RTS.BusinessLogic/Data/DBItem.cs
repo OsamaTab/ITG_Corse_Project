@@ -44,6 +44,11 @@ namespace RTS.BusinessLogic.Data
 
             return item.ToList();
         }
+        public List<Item> GetItemsByUser(Employee? user)
+        {
+            var item = _context.Items.Include(i => i.CurentUser).Include(i => i.DeviceType).Where(d => d.CurentUser.Id == user.Id);
+            return item.ToList();
+        }
 
         public async Task Create(Item item)
         {

@@ -47,7 +47,7 @@ namespace RTS
             services.AddTransient<IItemCategorieService, BusinessLogic.Data.DBItemCategorie>();
             services.AddTransient<IAccountService, BusinessLogic.Data.DBAccount>();
             services.AddTransient<IItemService, BusinessLogic.Data.DBItem>();
-
+            services.AddTransient<IItemRequestService, BusinessLogic.Data.DBItemRequest>();
 
         }
 
