@@ -74,7 +74,7 @@ namespace RTS.Controllers
                Boolean result= _itemRequestService.SendRequest(itemUser,body);
                 if (result)
                 {
-                    var itemRequest=await _itemRequestService.Create(item.Id, itemUser.Email, itemUser.Email,2);
+                    var itemRequest=await _itemRequestService.Create(item.Id, itemUser.Email, user.Id ,2);
 
                     await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
 
@@ -119,7 +119,7 @@ namespace RTS.Controllers
             }
             var user = await _userManager.FindByNameAsync("admin@i.com");
             var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
-            var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 1);
+            var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 4);
 
             await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
 
