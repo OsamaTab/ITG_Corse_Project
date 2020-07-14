@@ -2,11 +2,33 @@
 @{
     ViewData["Title"] = "Approve";
 }
+<link rel="stylesheet" href="~/css/animtion.css">
+<div style="height:30vh"></div>
+<div class=" w-100 ">
+    @*<div class="o-circle c-container__circle o-circle__sign--success">
+        <div class="o-circle__sign"></div>
+    </div>*@
+    <div class="success-checkmark ">
+        <div class="check-icon">
+            <span class="icon-line line-tip"></span>
+            <span class="icon-line line-long"></span>
+            <div class="icon-circle"></div>
+            <div class="icon-fix"></div>
+        </div>
+    </div>
+    <h1 class="text-center">@ViewBag.success</h1>
+</div>
 
-<h1>@ViewBag.success</h1>
 
 <script>
     window.setTimeout(function () {
         window.location.href = 'https://localhost:44365';
     }, 3000);
+
+    $("button").click(function () {
+        $(".check-icon").hide();
+        setTimeout(function () {
+            $(".check-icon").show();
+        }, 10);
+    });
 </script>

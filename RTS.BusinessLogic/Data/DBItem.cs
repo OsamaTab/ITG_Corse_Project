@@ -34,19 +34,19 @@ namespace RTS.BusinessLogic.Data
 
         public List<Item> GetItemsByName(string search)
         {
-            var item = from m in _context.Items.Include(i => i.CurentUser).Include(i => i.DeviceType)
+            var item = from m in _context.Items.Include(i => i.CurentUser).Include(i => i.DeviceType).Where(i=>i.IsActive==true)
                        select m;
 
             if (!String.IsNullOrEmpty(search))
             {
-                item = item.Include(i => i.CurentUser).Include(i => i.DeviceType).Where(s => s.Name.Contains(search));
+                item = item.Include(i => i.CurentUser).Include(i => i.DeviceType).Where(s => s.Name.Contains(search)).Where(i => i.IsActive == true);
             }
 
             return item.ToList();
         }
         public List<Item> GetItemsByUser(Employee? user)
         {
-            var item = _context.Items.Include(i => i.CurentUser).Include(i => i.DeviceType).Where(d => d.CurentUser.Id == user.Id);
+            var item = _context.Items.Include(i => i.CurentUser).Include(i => i.DeviceType).Where(d => d.CurentUser.Id == user.Id).Where(i => i.IsActive == true);
             return item.ToList();
         }
 

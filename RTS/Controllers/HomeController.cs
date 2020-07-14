@@ -71,7 +71,7 @@ namespace RTS.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var itemUser = await _userManager.FindByIdAsync(item.CurentUserId);
 
-            if (await _userManager.IsInRoleAsync(user, "Employee") && itemUser.Email != "admin@i.com" && itemUser.Email != null)
+            if (await _userManager.IsInRoleAsync(user, "Employee") && itemUser.Email != "admin@i.com" && itemUser.Email != null&&user.Id!=itemUser.Id)
             {
                string body=_itemRequestService.EmailText("wwwroot/Mail/Mail.html");
                Boolean result= _itemRequestService.SendRequest(itemUser,body,item.Id);
@@ -88,7 +88,7 @@ namespace RTS.Controllers
                 }
             }
 
-            else if(itemUser.Email == "admin@i.com")
+            else if(itemUser.Email == "admin@i.com"&& user.Id != itemUser.Id)
             {  
                 item.CurentUserId = user.Id;
                 await _itemServices.Edit(item);
@@ -121,8 +121,8 @@ namespace RTS.Controllers
             }
             var user = await _userManager.FindByNameAsync("admin@i.com");
             var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
-            var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 4);
 
+            var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 4);
             await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
 
             item.CurentUserId = user.Id;
@@ -138,31 +138,36 @@ namespace RTS.Controllers
             var item = await _context.Items.FindAsync(id);
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
+            if (user.Id != user1.Id )
+            {
+                var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 1);
+                await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
 
-            var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 1);
-            await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
+                item.CurentUserId = user.Id;
+                await _itemServices.Edit(item);
+                ViewBag.success = "Item Have been Send Successfuly";
 
-            item.CurentUserId = user.Id;
-            await _itemServices.Edit(item);
-            ViewBag.success = "Item Have been Send Successfuly";
-
-            return View();
+                return View();
+            }
+            return RedirectToAction(nameof(Index));
         }
 
-        
         [Authorize]
         public async Task<IActionResult> Deny(int? id)
         {
             var item = await _context.Items.FindAsync(id);
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
+            if (user.Id != item.CurentUserId)
+            {
+                var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
 
-            var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 3);
-            await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
+                var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 3);
+                await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
+                ViewBag.denied = "Item Have been Denied";
 
-            ViewBag.denied = "Item Have been Denied";
-
-            return View();
+                return View();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

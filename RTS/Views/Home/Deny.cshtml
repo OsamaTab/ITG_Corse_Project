@@ -4,10 +4,19 @@
     ViewData["Title"] = "Deny";
 }
 
-<h1>@ViewBag.denied</h1>
+<link rel="stylesheet" href="~/css/animtion.css">
+
+<div style="height:18vh"></div>
+<div class=" w-100 ">
+    <div class="o-circle c-container__circle o-circle__sign--failure">
+        <div class="o-circle__sign"></div>
+    </div>
+    <h1 class="text-center">@ViewBag.denied</h1>
+</div>
+
 
 <script>
-    window.setTimeout(function () {
+    window.settimeout(function () {
         window.location.href = 'https://localhost:44365';
     }, 3000);
 </script>
