@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RTS.BusinessLogic.IServices;
 using RTS.BusinessLogic.ViewModel;
+using RTS.DataAccess.Data;
 using RTS.DataAccess.Logic.RTSEntities;
 using RTS.Models;
 
@@ -17,6 +18,7 @@ namespace RTS.Controllers
 {
     public class HomeController : BaseController
     {
+        private readonly RTSDBContext _context;
         private readonly ILogger<HomeController> _logger;
         private readonly IItemService _itemServices;
         private readonly IItemRequestService _itemRequestService;
@@ -24,8 +26,9 @@ namespace RTS.Controllers
         private readonly UserManager<Employee> _userManager;
 
         public HomeController(ILogger<HomeController> logger, IItemService itemServices,UserManager<Employee> userManager,
-            IItemRequestService itemRequestService, ITransectionService transactionService)
+            IItemRequestService itemRequestService, ITransectionService transactionService,RTSDBContext context)
         {
+            _context = context;
             _logger = logger;
             _itemServices = itemServices;
             _userManager = userManager;
@@ -71,11 +74,10 @@ namespace RTS.Controllers
             if (await _userManager.IsInRoleAsync(user, "Employee") && itemUser.Email != "admin@i.com" && itemUser.Email != null)
             {
                string body=_itemRequestService.EmailText("wwwroot/Mail/Mail.html");
-               Boolean result= _itemRequestService.SendRequest(itemUser,body);
+               Boolean result= _itemRequestService.SendRequest(itemUser,body,item.Id);
                 if (result)
                 {
-                    var itemRequest=await _itemRequestService.Create(item.Id, itemUser.Email, user.Id ,2);
-
+                    var itemRequest=await _itemRequestService.Create(item.Id, itemUser.Email, user.Id ,3);
                     await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
 
                     TempData["status"] = "Success";
@@ -133,7 +135,17 @@ namespace RTS.Controllers
         [Authorize]
         public async Task<IActionResult> Approve(int? id)
         {
-           
+            var item = await _context.Items.FindAsync(id);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
+
+            var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 1);
+            await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
+
+            item.CurentUserId = user.Id;
+            await _itemServices.Edit(item);
+            ViewBag.success = "Item Have been Send Successfuly";
+
             return View();
         }
 
@@ -141,7 +153,15 @@ namespace RTS.Controllers
         [Authorize]
         public async Task<IActionResult> Deny(int? id)
         {
-           
+            var item = await _context.Items.FindAsync(id);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
+
+            var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 3);
+            await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
+
+            ViewBag.denied = "Item Have been Denied";
+
             return View();
         }
     }

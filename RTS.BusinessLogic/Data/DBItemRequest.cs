@@ -33,7 +33,7 @@ namespace RTS.BusinessLogic.Data
         }
 
 
-        public Boolean SendRequest(Employee user,string body)
+        public Boolean SendRequest(Employee user,string body,int id)
         {
             try
             {
@@ -45,6 +45,7 @@ namespace RTS.BusinessLogic.Data
                 mm.Subject = subject;
 
                 mm.From = new MailAddress("projectmail9990@gmail.com");
+                body = body.Replace("#linkApprove", id.ToString()).Replace("#linkDenied", id.ToString());
                 mm.Body = body;
                 mm.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com");
