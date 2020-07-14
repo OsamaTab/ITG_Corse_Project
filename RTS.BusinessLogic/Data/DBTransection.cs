@@ -19,10 +19,18 @@ namespace RTS.BusinessLogic.Data
             _context = context;
         }
 
-        public async Task Create(Trnasaction trnasaction)
+        public async Task<Trnasaction> Create(int id,int device,DateTime date)
         {
-            _context.Add(trnasaction);
+            Trnasaction transaction = new Trnasaction
+            {
+                ItemRequestId = id,
+                DeviceTypeId = device,
+                TransectionDate = date
+            };
+
+            _context.Add(transaction);
             await _context.SaveChangesAsync();
+            return transaction;
         }
 
         public List<Trnasaction> GetTransections()

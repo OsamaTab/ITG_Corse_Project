@@ -23,7 +23,6 @@ namespace RTS.Controllers
         private readonly ITransectionService _transactionService;
         private readonly UserManager<Employee> _userManager;
 
-
         public HomeController(ILogger<HomeController> logger, IItemService itemServices,UserManager<Employee> userManager,
             IItemRequestService itemRequestService, ITransectionService transactionService)
         {
@@ -33,23 +32,24 @@ namespace RTS.Controllers
             _itemRequestService = itemRequestService;
             _transactionService = transactionService;
         }
+
         public async Task<IActionResult> Index(string search)
         {
-            if (TempData["status"] != null)
-            {
-                ViewBag.message = TempData["status"].ToString();
-                TempData.Remove("status");
-            }
-
+            var user = await _userManager.GetUserAsync(HttpContext.User);
             var item =_itemServices.GetItemsByName(search);
             var it = new ItemViewModel();
             it.items = item;
 
-            var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
                 var userItems = _itemServices.GetItemsByUser(user);
                 it.Devices = userItems;
+            }
+
+            if (TempData["status"] != null)
+            {
+                ViewBag.message = TempData["status"].ToString();
+                TempData.Remove("status");
             }
 
             return View(it);
@@ -74,6 +74,10 @@ namespace RTS.Controllers
                Boolean result= _itemRequestService.SendRequest(itemUser,body);
                 if (result)
                 {
+                    var itemRequest=await _itemRequestService.Create(item.Id, itemUser.Email, itemUser.Email,2);
+
+                    await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
+
                     TempData["status"] = "Success";
                 }
                 else
@@ -83,37 +87,17 @@ namespace RTS.Controllers
             }
 
             else if(itemUser.Email == "admin@i.com")
-            {
-                try
-                {
-                    item.CurentUserId = user.Id;
-                    await _itemServices.Edit(item);
+            {  
+                item.CurentUserId = user.Id;
+                await _itemServices.Edit(item);
 
-                    ItemRequest itemRequest = new ItemRequest
-                    {
-                        ItemId = item.Id,
-                        ItemOwner = itemUser.Email,
-                        RequestedUserId=user.Id,
-                        StatusId=1
-                    };
+                var itemRequest= await _itemRequestService.Create(item.Id, itemUser.Email, user.Id,1);
 
-                    await _itemRequestService.Create(itemRequest);
-
-                    Trnasaction transaction = new Trnasaction
-                    {
-                       ItemRequestId=itemRequest.Id,
-                       DeviceTypeId=item.DeviceTypeId,
-                       TransectionDate=DateTime.Now
-                    };
-                    await _transactionService.Create(transaction);
+                await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
 
 
-                    TempData["status"] = "Success";
-                }
-                catch (Exception)
-                {
-                    TempData["status"] = "Failed";
-                }
+                TempData["status"] = "Success";
+             
             }
             else
             {
@@ -135,24 +119,9 @@ namespace RTS.Controllers
             }
             var user = await _userManager.FindByNameAsync("admin@i.com");
             var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
+            var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 1);
 
-            ItemRequest itemRequest = new ItemRequest
-            {
-                ItemId = item.Id,
-                ItemOwner = user1.Email,
-                RequestedUserId = user.Id,
-                StatusId = 4
-            };
-
-            await _itemRequestService.Create(itemRequest);
-
-            Trnasaction transaction = new Trnasaction
-            {
-                ItemRequestId = itemRequest.Id,
-                DeviceTypeId = item.DeviceTypeId,
-                TransectionDate = DateTime.Now
-            };
-            await _transactionService.Create(transaction);
+            await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
 
             item.CurentUserId = user.Id;
             await _itemServices.Edit(item);
@@ -161,21 +130,19 @@ namespace RTS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
         [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Approve(int id)
+        public async Task<IActionResult> Approve(int? id)
         {
-
-            return RedirectToAction(nameof(Index));
+           
+            return View();
         }
 
-        [HttpPost]
+        
         [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Deny(int id)
+        public async Task<IActionResult> Deny(int? id)
         {
-            return RedirectToAction(nameof(Index));
+           
+            return View();
         }
     }
 }

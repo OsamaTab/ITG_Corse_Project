@@ -80,7 +80,7 @@
 </style>
 <div class="row w-100">
     <div class="card h-100 mx-5 col-md-8">
-        <div class="p-0">
+        
             @if (ViewBag.message == "Success")
             {
                 <div class="alert alert-success">
@@ -94,7 +94,7 @@
                     <strong>Error!</strong> Email have not been sended.
                 </div>
             }
-        </div>
+        
         <div class="card-body">
             <form asp-controller="Home" asp-action="Index">
                 <p class="row">

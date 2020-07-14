@@ -10,7 +10,7 @@ namespace RTS.BusinessLogic.IServices
     {
         public Boolean SendRequest(Employee user,string body);
         public string EmailText(string path);
-        public Task Create(ItemRequest itemRequest);
+        public Task<ItemRequest> Create(int id, string owner, string requester, int status);
 
     }
 }

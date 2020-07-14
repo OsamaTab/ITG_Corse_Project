@@ -19,10 +19,17 @@ namespace RTS.BusinessLogic.Data
             _context = context;
         }
 
-        public async Task Create(ItemRequest itemRequest)
+        public async Task<ItemRequest> Create(int id ,string owner,string requester,int status)
         {
+            ItemRequest itemRequest = new ItemRequest();
+            itemRequest.ItemId = id;
+            itemRequest.ItemOwner = owner;
+            itemRequest.RequestedUserId = requester;
+            itemRequest.StatusId = status;
+            
             _context.Add(itemRequest);
             await _context.SaveChangesAsync();
+            return itemRequest;
         }
 
 
