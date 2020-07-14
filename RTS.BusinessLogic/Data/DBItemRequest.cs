@@ -1,7 +1,9 @@
 ﻿using RTS.BusinessLogic.IServices;
+using RTS.DataAccess.Data;
 using RTS.DataAccess.Logic.RTSEntities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +12,21 @@ namespace RTS.BusinessLogic.Data
 {
     public class DBItemRequest : IItemRequestService
     {
-        public Boolean RequestItem(Employee user)
+        private readonly RTSDBContext _context;
+
+        public DBItemRequest(RTSDBContext context)
+        {
+            _context = context;
+        }
+
+        public async Task Create(ItemRequest itemRequest)
+        {
+            _context.Add(itemRequest);
+            await _context.SaveChangesAsync();
+        }
+
+
+        public Boolean SendRequest(Employee user,string body)
         {
             try
             {
@@ -22,7 +38,7 @@ namespace RTS.BusinessLogic.Data
                 mm.Subject = subject;
 
                 mm.From = new MailAddress("projectmail9990@gmail.com");
-                mm.Body = "<h1 style='color: red'>test<h1>";
+                mm.Body = body;
                 mm.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com");
                 smtp.Port = 587;
@@ -38,6 +54,29 @@ namespace RTS.BusinessLogic.Data
             {
                 return false;
             }
+        }
+        public string EmailText(string path)
+        {
+
+            StringBuilder storeContent = new StringBuilder();
+
+            try
+            {
+                using (StreamReader htmlReader = new StreamReader(path))
+                {
+                    string lineStr;
+                    while ((lineStr = htmlReader.ReadLine()) != null)
+                    {
+                        storeContent.Append(lineStr);
+                    }
+                }
+            }
+            catch (Exception objError)
+            {
+                throw objError;
+            }
+
+            return storeContent.ToString();
         }
     }
 }

@@ -31,7 +31,8 @@ namespace RTS.DataAccess.Data
             modelBuilder.Entity<RequestStatus>().HasData(
                new RequestStatus() { Id = 1, Status = "approved" },
                new RequestStatus() { Id = 2, Status = "pending" },
-               new RequestStatus() { Id = 3, Status = "rejected" });
+               new RequestStatus() { Id = 3, Status = "rejected" },
+               new RequestStatus() { Id = 4, Status = "Returnd" });
 
             modelBuilder.Entity<IdentityRole>().HasData(
                new IdentityRole() { Name = "Admin" , NormalizedName = "Admin".ToUpper() },

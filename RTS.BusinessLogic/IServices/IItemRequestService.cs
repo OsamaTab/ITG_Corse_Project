@@ -8,6 +8,9 @@ namespace RTS.BusinessLogic.IServices
 {
     public interface IItemRequestService
     {
-        public Boolean RequestItem(Employee user);
+        public Boolean SendRequest(Employee user,string body);
+        public string EmailText(string path);
+        public Task Create(ItemRequest itemRequest);
+
     }
 }

@@ -29,10 +29,10 @@
                                     Row
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.DeviceType)
+                                    DeviceType
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Item)
+                                    Item
                                 </th>
                                 <th>
                                     Recustid User
@@ -49,20 +49,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @*@foreach (var item in Model)
+                            @foreach (var transaction in Model)
                             {
 
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DeviceType.Type)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Item.Item)
-                                    </td>
-                                  
-                                </tr>
-                            }*@
+                            <tr>
+                                <td></td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => transaction.DeviceType.Type)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => transaction.Item.Item.Name)
+                                </td>
+                                <th>
+                                    @Html.DisplayFor(modelItem => transaction.Item.RequestedUser.UserName)
+
+                                </th>
+                                <th>
+                                    @Html.DisplayFor(modelItem => transaction.Item.ItemOwner)
+
+                                </th>
+                                <th>
+                                    @Html.DisplayFor(modelItem => transaction.TransectionDate)
+
+                                </th>
+                                <th>
+                                    @Html.DisplayFor(modelItem => transaction.Item.Status.Status)
+
+                                </th>
+                            </tr>
+                            }
                         </tbody>
                     </table>
                 </div>

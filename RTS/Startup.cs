@@ -48,6 +48,8 @@ namespace RTS
             services.AddTransient<IAccountService, BusinessLogic.Data.DBAccount>();
             services.AddTransient<IItemService, BusinessLogic.Data.DBItem>();
             services.AddTransient<IItemRequestService, BusinessLogic.Data.DBItemRequest>();
+            services.AddTransient<ITransectionService, BusinessLogic.Data.DBTransection>();
+
 
         }
 
