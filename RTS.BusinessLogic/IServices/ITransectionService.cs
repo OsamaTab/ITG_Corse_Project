@@ -8,7 +8,7 @@ namespace RTS.BusinessLogic.IServices
 {
     public interface ITransectionService
     {
-        public List<Trnasaction> GetTransections();
+        public List<Trnasaction> GetTransections(string? search, int? filter);
         public Task<Trnasaction> Create(int id, int device, DateTime date);
 
     }

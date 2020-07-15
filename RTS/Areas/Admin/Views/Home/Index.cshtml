@@ -11,7 +11,19 @@
                 <div>
                     <h4 class="font-weight-bold mb-0">Trnasaction</h4>
                 </div>
-
+                <form asp-controller="Home" asp-action="Index">
+                    <p class="row">
+                        <input class="form-control col-7" type="text" name="search" placeholder="Search By Name">
+                        <input class="ml-2 btn btn-primary" type="submit" value="Search" />
+                    </p>
+                </form>
+                <form asp-controller="Home" asp-action="Index" id="filterForm" class="col-md-4">
+                    <div class="form-group m-0 ">
+                        <select id="Statusfilter" name="filter" class="form-control" asp-items="ViewBag.StatusId">
+                            <option value="" selected>Filter by Status</option>
+                        </select>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -52,31 +64,30 @@
                             @foreach (var transaction in Model)
                             {
 
-                            <tr>
-                                <td></td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => transaction.DeviceType.Type)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => transaction.Item.Item.Name)
-                                </td>
-                                <th>
-                                    @Html.DisplayFor(modelItem => transaction.Item.RequestedUser.UserName)
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => transaction.DeviceType.Type)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => transaction.Item.Item.Name)
+                                    </td>
+                                    <th>
+                                        @Html.DisplayFor(modelItem => transaction.Item.RequestedUser.UserName)
 
-                                </th>
-                                <th>
-                                    @Html.DisplayFor(modelItem => transaction.Item.ItemOwner)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayFor(modelItem => transaction.Item.ItemOwner)
 
-                                </th>
-                                <th>
-                                    @Html.DisplayFor(modelItem => transaction.TransectionDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayFor(modelItem => transaction.TransectionDate)
 
-                                </th>
-                                <th>
-                                    @Html.DisplayFor(modelItem => transaction.Item.Status.Status)
-
-                                </th>
-                            </tr>
+                                    </th>
+                                    <th >
+                                        <h4 id="status">@Html.DisplayFor(modelItem => transaction.Item.Status.Status)</h4>
+                                    </th>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -90,6 +101,28 @@
 
 
 
+@section Scripts{
+    <script>
+        $(function () {
 
+            var status = $('#status').text().trim();
+            var color = 'red';
+            if (status == 'approved') {
+                color = 'green';
+            }
+            if (status == 'pending') {
+                color = 'yellow';
+            }
+            if (status == 'returnd') {
+                color = 'blue';
+            }
+            $('#status').css('color', color);
+            
+        });
 
+        $("#Statusfilter").on('change', function () {
+            $("#filterForm").submit();
+        });
 
+    </script>
+}

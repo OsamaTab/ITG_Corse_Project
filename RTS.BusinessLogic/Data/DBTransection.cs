@@ -33,9 +33,19 @@ namespace RTS.BusinessLogic.Data
             return transaction;
         }
 
-        public List<Trnasaction> GetTransections()
+        public List<Trnasaction> GetTransections(string? search ,int? filter)
         {
-            var trnasactions = _context.Trnasactions.Include(t=>t.Item.Item).Include(d=>d.DeviceType).Include(t=>t.Item.RequestedUser).Include(t=>t.Item.Status);
+            var trnasactions = from m in _context.Trnasactions.Include(t => t.Item.Item).Include(d => d.DeviceType).Include(t => t.Item.RequestedUser).Include(t => t.Item.Status)
+                       select m;
+
+            if (filter != null)
+            {
+                trnasactions = trnasactions.Where(s=>s.Item.StatusId==filter);
+            }
+            if (!String.IsNullOrEmpty(search))
+            {
+                trnasactions = trnasactions.Where(s => s.Item.Item.Name.Contains(search));
+            }
             return trnasactions.ToList();
         }
     }
