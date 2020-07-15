@@ -133,12 +133,12 @@ namespace RTS.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Approve(int? id)
+        public async Task<IActionResult> Approve(int? id,string userId)
         {
             var item = await _context.Items.FindAsync(id);
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
-            if (user.Id != user1.Id )
+            if (user.Id != user1.Id && userId==user1.Id )
             {
                 var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 1);
                 await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
@@ -153,14 +153,13 @@ namespace RTS.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Deny(int? id)
+        public async Task<IActionResult> Deny(int? id, string userId)
         {
             var item = await _context.Items.FindAsync(id);
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if (user.Id != item.CurentUserId)
+            var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
+            if (user.Id != item.CurentUserId && userId == user1.Id)
             {
-                var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
-
                 var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 3);
                 await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
                 ViewBag.denied = "Item Have been Denied";

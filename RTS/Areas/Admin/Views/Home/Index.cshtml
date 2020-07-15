@@ -64,30 +64,48 @@
                             @foreach (var transaction in Model)
                             {
 
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => transaction.DeviceType.Type)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => transaction.Item.Item.Name)
-                                    </td>
-                                    <th>
-                                        @Html.DisplayFor(modelItem => transaction.Item.RequestedUser.UserName)
+                            <tr>
+                                <td></td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => transaction.DeviceType.Type)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => transaction.Item.Item.Name)
+                                </td>
+                                <th>
+                                    @Html.DisplayFor(modelItem => transaction.Item.RequestedUser.UserName)
 
-                                    </th>
-                                    <th>
-                                        @Html.DisplayFor(modelItem => transaction.Item.ItemOwner)
+                                </th>
+                                <th>
+                                    @Html.DisplayFor(modelItem => transaction.Item.ItemOwner)
 
-                                    </th>
-                                    <th>
-                                        @Html.DisplayFor(modelItem => transaction.TransectionDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayFor(modelItem => transaction.TransectionDate)
 
-                                    </th>
-                                    <th >
-                                        <h4 id="status">@Html.DisplayFor(modelItem => transaction.Item.Status.Status)</h4>
-                                    </th>
-                                </tr>
+                                </th>
+                                <th>
+                                    @if (transaction.Item.Status.Id == 1)
+                                    {
+                                        <h4 class=" text-success">@Html.DisplayFor(modelItem => transaction.Item.Status.Status)</h4>
+                                    }
+                                    else if (transaction.Item.Status.Id == 2)
+                                    {
+                                        <h4 style="color:yellow">@Html.DisplayFor(modelItem => transaction.Item.Status.Status)</h4>
+                                    }
+                                    else if (transaction.Item.Status.Id == 3)
+                                    {
+                                        <h4 class=" text-danger">@Html.DisplayFor(modelItem => transaction.Item.Status.Status)</h4>
+                                    }
+                                    else
+                                    {
+                                        <h4 class=" text-primary">@Html.DisplayFor(modelItem => transaction.Item.Status.Status)</h4>
+                                    }
+
+                                </th>
+
+
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -103,22 +121,6 @@
 
 @section Scripts{
     <script>
-        $(function () {
-
-            var status = $('#status').text().trim();
-            var color = 'red';
-            if (status == 'approved') {
-                color = 'green';
-            }
-            if (status == 'pending') {
-                color = 'yellow';
-            }
-            if (status == 'returnd') {
-                color = 'blue';
-            }
-            $('#status').css('color', color);
-            
-        });
 
         $("#Statusfilter").on('change', function () {
             $("#filterForm").submit();

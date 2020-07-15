@@ -45,7 +45,7 @@ namespace RTS.BusinessLogic.Data
                 mm.Subject = subject;
 
                 mm.From = new MailAddress("projectmail9990@gmail.com");
-                body = body.Replace("#linkApprove", id.ToString()).Replace("#linkDenied", id.ToString());
+                body = body.Replace("#linkApprove", id.ToString()).Replace("#linkDenied", id.ToString()).Replace("#authUser", user.Id.ToString());
                 mm.Body = body;
                 mm.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com");

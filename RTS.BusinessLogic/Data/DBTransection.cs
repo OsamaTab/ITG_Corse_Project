@@ -46,7 +46,8 @@ namespace RTS.BusinessLogic.Data
             {
                 trnasactions = trnasactions.Where(s => s.Item.Item.Name.Contains(search));
             }
-            return trnasactions.ToList();
+
+            return trnasactions.OrderByDescending(x=>x.TransectionDate).ToList();
         }
     }
 }
