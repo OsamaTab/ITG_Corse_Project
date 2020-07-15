@@ -16,9 +16,9 @@ namespace RTS.DataAccess.Data
         {
         }
         public DbSet<Item> Items { get; set; }
-        public DbSet<ItemCategorie> itemCategories { get; set; }
+        public DbSet<ItemCategorie> ItemCategories { get; set; }
         public DbSet<Trnasaction> Trnasactions { get; set; }
-        public DbSet<ItemRequest> itemRequests { get; set; }
+        public DbSet<ItemRequest> ItemRequests { get; set; }
         public DbSet<RequestStatus> RequestStatuses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,10 +34,7 @@ namespace RTS.DataAccess.Data
                new RequestStatus() { Id = 3, Status = "rejected" },
                new RequestStatus() { Id = 4, Status = "Returnd" });
 
-            modelBuilder.Entity<IdentityRole>().HasData(
-               new IdentityRole() { Name = "Admin" , NormalizedName = "Admin".ToUpper() },
-               new IdentityRole() { Name = "Employee",NormalizedName = "Employee".ToUpper() }
-               );
+            
         }
     }
 }

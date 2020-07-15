@@ -57,7 +57,7 @@ namespace RTS.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var itemCategorie = await _context.itemCategories.FindAsync(id);
+            var itemCategorie = await _context.ItemCategories.FindAsync(id);
             if (itemCategorie == null)
             {
                 return NotFound();
@@ -107,7 +107,7 @@ namespace RTS.Areas.Admin.Controllers
 
         private bool ItemTypeExists(int id)
         {
-            return _context.itemCategories.Any(e => e.Id == id);
+            return _context.ItemCategories.Any(e => e.Id == id);
         }
     }
 }

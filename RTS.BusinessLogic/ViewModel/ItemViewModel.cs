@@ -9,6 +9,8 @@ namespace RTS.BusinessLogic.ViewModel
     {
         public IEnumerable<Item> items { get; set; }
         public IEnumerable<Item> Devices { get; set; }
+        public IEnumerable<ItemRequest> Request { get; set; }
+
 
     }
 }

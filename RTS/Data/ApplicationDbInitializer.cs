@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using RTS.DataAccess.Data;
 using RTS.DataAccess.Logic.RTSEntities;
 using System;
 using System.Collections.Generic;
@@ -9,6 +11,25 @@ namespace RTS.Data
 {
     public class ApplicationDbInitializer
     {
+        public static void SeedRoles(RoleManager<IdentityRole> roleManager)
+        {
+            if (!roleManager.RoleExistsAsync("Admin").Result)
+            {
+                IdentityRole role = new IdentityRole();
+                role.Name = "Admin";
+                role.NormalizedName = "Admin".ToUpper();
+                IdentityResult roleResult = roleManager.CreateAsync(role).Result;
+            }
+
+
+            if (!roleManager.RoleExistsAsync("Employee").Result)
+            {
+                IdentityRole role = new IdentityRole();
+                role.Name = "Employee";
+                role.NormalizedName = "Employee".ToUpper();
+                IdentityResult roleResult = roleManager.CreateAsync(role).Result;
+            }
+        }
         public static void SeedUsers(UserManager<Employee> userManager)
         {
             if (userManager.FindByEmailAsync("admin@i.com").Result == null)
@@ -27,5 +48,6 @@ namespace RTS.Data
                 }
             }
         }
+     
     }
 }

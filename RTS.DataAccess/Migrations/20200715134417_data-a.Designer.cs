@@ -10,8 +10,8 @@ using RTS.DataAccess.Data;
 namespace RTS.DataAccess.Migrations
 {
     [DbContext(typeof(RTSDBContext))]
-    [Migration("20200713111412_adding_isDeleted_item")]
-    partial class adding_isDeleted_item
+    [Migration("20200715134417_data-a")]
+    partial class dataa
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,22 +46,6 @@ namespace RTS.DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "2ceb67af-72c2-4816-abf7-b981699e7222",
-                            ConcurrencyStamp = "558d893e-5cf9-4519-a835-9c81038b5832",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "880a526a-8c9f-43dc-beb0-0e16d56b3dac",
-                            ConcurrencyStamp = "935509c6-6489-4fc1-9edc-85789366b83c",
-                            Name = "Employee",
-                            NormalizedName = "EMPLOYEE"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -191,6 +175,9 @@ namespace RTS.DataAccess.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -245,9 +232,11 @@ namespace RTS.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CurentUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DeviceTypeId")
@@ -260,12 +249,15 @@ namespace RTS.DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Manufacturer")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Model")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PurchaseDate")
@@ -290,7 +282,11 @@ namespace RTS.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -309,9 +305,11 @@ namespace RTS.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ItemOwner")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RequestedUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("StatusId")
@@ -336,6 +334,7 @@ namespace RTS.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -357,6 +356,11 @@ namespace RTS.DataAccess.Migrations
                         {
                             Id = 3,
                             Status = "rejected"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Status = "Returnd"
                         });
                 });
 
@@ -440,7 +444,9 @@ namespace RTS.DataAccess.Migrations
                 {
                     b.HasOne("RTS.DataAccess.Logic.RTSEntities.Employee", "CurentUser")
                         .WithMany()
-                        .HasForeignKey("CurentUserId");
+                        .HasForeignKey("CurentUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RTS.DataAccess.Logic.RTSEntities.ItemCategorie", "DeviceType")
                         .WithMany()
@@ -459,7 +465,9 @@ namespace RTS.DataAccess.Migrations
 
                     b.HasOne("RTS.DataAccess.Logic.RTSEntities.Employee", "RequestedUser")
                         .WithMany()
-                        .HasForeignKey("RequestedUserId");
+                        .HasForeignKey("RequestedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RTS.DataAccess.Logic.RTSEntities.RequestStatus", "Status")
                         .WithMany()

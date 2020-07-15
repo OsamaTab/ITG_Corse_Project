@@ -69,6 +69,7 @@ namespace RTS.Areas.Admin.Controllers
                 await _accountService.Edit(userId, model);
                 return RedirectToAction("index", "account");
             }
+            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
             return View(model);
         }
 

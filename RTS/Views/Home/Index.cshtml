@@ -8,8 +8,30 @@
 @{
     ViewData["Title"] = "Index";
 }
+<link rel="stylesheet" href="~/css/animtion.css">
+
 <style>
     /*--thank you pop starts here--*/
+
+    .item1 {
+        grid-area: main;
+    }
+
+    .item2 {
+        grid-area: dvices;
+    }
+
+    .item3 {
+        grid-area: transtion;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-areas: ' main main  dvices' ' main main  transtion';
+        grid-gap: 10px;
+        padding: 10px;
+    }
+
     .container {
         max-width: 100%;
     }
@@ -78,30 +100,29 @@
     /*--thank you pop ends here--*/
 
 </style>
-<div class="row w-100">
-    <div class="card h-100 mx-5 col-md-8">
-        <div class="mt-2">
-            @if (ViewBag.message == "Success")
-            {
-                <div class="alert alert-success">
-                    <strong>Success!</strong> Email have been send.
+<div class="grid-container w-100">
+    <div class="card h-100 mx-5 item1 shadow">
+        <div class="card-body">
+            <div class="row px-4 w-100">
+                <div class="col-md-8">
+                    <form asp-controller="Home" asp-action="Index">
+                        <p class="row">
+                            <input class="form-control col-7" type="text" name="search" placeholder="Search By Name">
+                            <input class="ml-2 btn btn-primary" type="submit" value="Search" />
+                        </p>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <form asp-controller="Home" asp-action="Index" id="filterForm" class="">
+                        <div class="form-group m-0 ">
+                            <select id="DeiceFilter" name="filter" class="form-control" asp-items="ViewBag.DeviceTypeId">
+                                <option value="" selected>Filter by Device</option>
+                            </select>
+                        </div>
+                    </form>
                 </div>
 
-            }
-            else if (ViewBag.message == "Failed")
-            {
-                <div class="alert alert-danger">
-                    <strong>Error!</strong> Email did not send.
-                </div>
-            }
-        </div>
-        <div class="card-body">
-            <form asp-controller="Home" asp-action="Index">
-                <p class="row">
-                    <input class="form-control col-7" type="text" name="search" placeholder="Search By Name">
-                    <input class="ml-2 btn btn-primary" type="submit" value="Search" />
-                </p>
-            </form>
+            </div>
             <div class="p-0 mx-0 row">
                 <h3 class="card-title ">Items</h3>
             </div>
@@ -136,10 +157,12 @@
                             <th>
                                 PurchaseDate
                             </th>
-                            
-                            <th>
-                                Request
-                            </th>
+                            @if (User.IsInRole("Employee"))
+                            {
+                                <th>
+                                    Request
+                                </th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -166,32 +189,21 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.SerialNumber)
                                 </td>
-                               
+
                                 <td>
                                     @Html.DisplayFor(modelItem => item.CurentUser.UserName)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.PurchaseDate)
                                 </td>
-                                <td>
-                                    <form class="d-inline-flex" asp-action="SendMail" asp-route-id="@item.Id">
-                                        <input type="hidden" asp-for="@item.Id" />
-                                        <input type="hidden" asp-for="@item.Name" />
-                                        <input type="hidden" asp-for="@item.SerialNumber" />
-                                        <input type="hidden" asp-for="@item.CurentUserId" />
-                                        <input type="hidden" asp-for="@item.DeviceTypeId" />
-                                        <input type="hidden" asp-for="@item.Description" />
-                                        <input type="hidden" asp-for="@item.Manufacturer" />
-                                        <input type="hidden" asp-for="@item.Description" />
-                                        <input type="hidden" asp-for="@item.Model" />
-                                        <input type="hidden" asp-for="@item.PurchaseDate" />
-                                        <input type="hidden" asp-for="@item.IsActive" />
-                                        <input type="hidden" asp-for="@item.IsDeleted" />
-
-
-                                        <input type="submit" value="Request" class="btn btn-primary" />
-                                    </form>
-                                </td>
+                                @if (User.IsInRole("Employee"))
+                                {
+                                    <td>
+                                        <form class="d-inline-flex" asp-action="SendRequest" asp-route-id="@item.Id">
+                                            <input type="submit" value="Request" class="btn btn-primary" />
+                                        </form>
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>
@@ -201,18 +213,10 @@
     </div>
 
 
-    @if (SignInManager.IsSignedIn(User))
+    @if (User.IsInRole("Employee"))
     {
-        <div class="card h-100 col-md-3">
+        <div class="card h-100 item2 shadow">
             <div class="card-body">
-                @if (ViewBag.message == "returned")
-                {
-                    <div class="alert alert-success">
-                        <strong>Success!</strong> Item return successfuly.
-                    </div>
-
-                }
-
                 <div class="p-0 mx-0 row">
                     <h3 class="card-title ">Your Devices</h3>
                 </div>
@@ -249,20 +253,7 @@
 
                                     <td>
                                         <form class="d-inline-flex" asp-action="Return" asp-route-id="@item.Id">
-                                            <input type="hidden" asp-for="@item.Id" />
-                                            <input type="hidden" asp-for="@item.Name" />
-                                            <input type="hidden" asp-for="@item.SerialNumber" />
-                                            <input type="hidden" asp-for="@item.CurentUserId" />
-                                            <input type="hidden" asp-for="@item.DeviceTypeId" />
-                                            <input type="hidden" asp-for="@item.Description" />
-                                            <input type="hidden" asp-for="@item.Manufacturer" />
-                                            <input type="hidden" asp-for="@item.Description" />
-                                            <input type="hidden" asp-for="@item.Model" />
-                                            <input type="hidden" asp-for="@item.PurchaseDate" />
-                                            <input type="hidden" asp-for="@item.IsActive" />
-                                            <input type="hidden" asp-for="@item.IsDeleted" />
                                             <input type="submit" value="Return" class="btn btn-primary " />
-
                                         </form>
                                     </td>
                                 </tr>
@@ -274,19 +265,141 @@
                 </div>
             </div>
         </div>
+        <div class="card h-100 item3 shadow">
+            <div class="card-body">
+                <div class="p-0 mx-0 row">
+                    <h3 class="card-title ">Requests</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Requested User
+                                </th>
+                                <th>
+                                    Item Name
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var request in Model.Request)
+                            {
+
+                                <tr>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => request.RequestedUser.Email)
+
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => request.Item.Name)
+
+                                    </td>
+
+                                    <td class="d-inline-flex">
+                                        <form class="" asp-action="Approve" asp-route-id="@request.Id" asp-route-model=1>
+                                            <input type="submit" value="Approve" class="btn btn-primary mx-2" />
+                                        </form>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2">Deny</button>
+
+                                    </td>
+                                    <div id="myModal2" class="modal fade">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content " style="min-height:400px ;min-width:600px">
+                                                <div style="height:5vh"></div>
+                                                <div class=" w-100 ">
+                                                    <div class="o-circle c-container__circle o-circle__sign--failure">
+                                                        <div class="o-circle__sign"></div>
+                                                    </div>
+                                                    
+
+                                                </div>
+                                                <form asp-action="Deny" asp-route-id="@request.Id" asp-route-model=1 style=" text-align: -webkit-center;">
+                                                    <div style="margin:0 0 0 85px">
+                                                        <h3 class="mb-4">The reason behind your rejection </h3>
+                                                        <p class="text-center "style="width:80%">
+                                                            <textarea class="form-control " type="text" name="message" placeholder="Message..."></textarea>
+                                                            <input class="ml-2 btn btn-primary mt-3" type="submit" value="Send" />
+                                                        </p>
+                                                    </div>
+                                                </form>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    @if (ViewBag.success != null)
+    {
+        <div id="myModal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div style="height:10vh"></div>
+                    <div class=" w-100 ">
+                        <div class="success-checkmark ">
+                            <div class="check-icon">
+                                <span class="icon-line line-tip"></span>
+                                <span class="icon-line line-long"></span>
+                                <div class="icon-circle"></div>
+                                <div class="icon-fix"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-center my-5">@ViewBag.success</h3>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+    @if (ViewBag.failed != null)
+    {
+        <div id="myModal1" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div style="height:10vh"></div>
+                    <div class=" w-100 ">
+                        <div class="o-circle c-container__circle o-circle__sign--failure">
+                            <div class="o-circle__sign"></div>
+                        </div>
+                        <h3 class="text-center mb-5">@ViewBag.failed</h3>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
     }
 </div>
 
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#myModal").modal('show');
+            $("#myModal1").modal('show');
+        });
+        $("#DeiceFilter").on('change', function () {
+            $("#filterForm").submit();
+        });
+        var table = document.getElementsByTagName('table')[0],
+            rows = table.getElementsByTagName('tr'),
+            text = 'textContent' in document ? 'textContent' : 'innerText';
 
-
-
-<script>
-
-    var table = document.getElementsByTagName('table')[0],
-        rows = table.getElementsByTagName('tr'),
-        text = 'textContent' in document ? 'textContent' : 'innerText';
-
-    for (var i = 1, len = rows.length; i < len; i++) {
-        rows[i].children[0][text] = i + '' + rows[i].children[0][text];
-    }
-</script>
+        for (var i = 1, len = rows.length; i < len; i++) {
+            rows[i].children[0][text] = i + '' + rows[i].children[0][text];
+        }
+    </script>
+}

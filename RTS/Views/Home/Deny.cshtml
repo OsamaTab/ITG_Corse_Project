@@ -11,12 +11,19 @@
     <div class="o-circle c-container__circle o-circle__sign--failure">
         <div class="o-circle__sign"></div>
     </div>
-    <h1 class="text-center">@ViewBag.denied</h1>
+    <form  asp-action="Deny" asp-route-id="@ViewBag.id" style=" text-align: -webkit-center;">
+        <h3 class="mb-4">The reason behind your rejection </h3>
+        <p class="text-center w-75">
+            <textarea class="form-control " type="text" name="message" placeholder="Message..."></textarea>
+            <input class="ml-2 btn btn-primary mt-3" type="submit" value="Send" />
+        </p>
+    </form>
 </div>
 
-
-<script>
-    window.settimeout(function () {
-        window.location.href = 'https://localhost:44365';
-    }, 3000);
-</script>
+@section Scripts{
+    <script>
+        window.settimeout(function () {
+            window.location.href = 'https://localhost:44365';
+        }, 3000);
+    </script>
+}

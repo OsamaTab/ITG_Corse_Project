@@ -10,18 +10,17 @@ namespace RTS.DataAccess.Logic.RTSEntities
     {
         [Key]
         public int Id { get; set; }
+        [Required]
         public int ItemId { get; set; }
 
         [ForeignKey("ItemId")]
         public Item Item { get; set; }
-
         public string RequestedUserId { get; set; }
 
         [ForeignKey("RequestedUserId")]
         public Employee RequestedUser { get; set; }
-
         public string ItemOwner { get; set; }
-
+        [Required]
         public int StatusId { get; set; }
 
         [ForeignKey("StatusId")]

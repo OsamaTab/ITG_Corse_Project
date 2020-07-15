@@ -5,17 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200709142604_Adding_Db.cs" />
-    <Compile Remove="Migrations\20200709142604_Adding_Db.Designer.cs" />
-    <Compile Remove="Migrations\20200709145829_Adding_Db_ON_DELETE_NO_ACTION.cs" />
-    <Compile Remove="Migrations\20200709145829_Adding_Db_ON_DELETE_NO_ACTION.Designer.cs" />
-    <Compile Remove="Migrations\20200709151637_Adding_Db.cs" />
-    <Compile Remove="Migrations\20200709151637_Adding_Db.Designer.cs" />
-    <Compile Remove="Migrations\20200713110458_adding_isDeleted_item.cs" />
-    <Compile Remove="Migrations\20200713110458_adding_isDeleted_item.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />

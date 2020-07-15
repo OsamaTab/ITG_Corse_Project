@@ -10,8 +10,8 @@ using RTS.DataAccess.Data;
 namespace RTS.DataAccess.Migrations
 {
     [DbContext(typeof(RTSDBContext))]
-    [Migration("20200713154445_dd")]
-    partial class dd
+    [Migration("20200715131933_data")]
+    partial class data
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,22 +46,6 @@ namespace RTS.DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "126fd8e3-851c-4c27-8ac1-99704c58a06f",
-                            ConcurrencyStamp = "b51af477-dbc8-4a65-89d3-9f6f5214553a",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "c1c996ac-eef7-43f6-91a8-50db6ee84568",
-                            ConcurrencyStamp = "a5cbfa67-816a-4d9c-9854-6f7bb2dcb628",
-                            Name = "Employee",
-                            NormalizedName = "EMPLOYEE"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -248,9 +232,11 @@ namespace RTS.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CurentUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DeviceTypeId")
@@ -263,12 +249,15 @@ namespace RTS.DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Manufacturer")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Model")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PurchaseDate")
@@ -297,6 +286,7 @@ namespace RTS.DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -315,9 +305,11 @@ namespace RTS.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ItemOwner")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RequestedUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("StatusId")
@@ -342,28 +334,12 @@ namespace RTS.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("RequestStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Status = "approved"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Status = "pending"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Status = "rejected"
-                        });
                 });
 
             modelBuilder.Entity("RTS.DataAccess.Logic.RTSEntities.Trnasaction", b =>
@@ -446,7 +422,9 @@ namespace RTS.DataAccess.Migrations
                 {
                     b.HasOne("RTS.DataAccess.Logic.RTSEntities.Employee", "CurentUser")
                         .WithMany()
-                        .HasForeignKey("CurentUserId");
+                        .HasForeignKey("CurentUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RTS.DataAccess.Logic.RTSEntities.ItemCategorie", "DeviceType")
                         .WithMany()
@@ -465,7 +443,9 @@ namespace RTS.DataAccess.Migrations
 
                     b.HasOne("RTS.DataAccess.Logic.RTSEntities.Employee", "RequestedUser")
                         .WithMany()
-                        .HasForeignKey("RequestedUserId");
+                        .HasForeignKey("RequestedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RTS.DataAccess.Logic.RTSEntities.RequestStatus", "Status")
                         .WithMany()

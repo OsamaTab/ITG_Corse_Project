@@ -41,7 +41,7 @@ namespace RTS.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            ViewData["DeviceTypeId"] = new SelectList(_context.itemCategories, "Id", "Type");
+            ViewData["DeviceTypeId"] = new SelectList(_context.ItemCategories, "Id", "Type");
             return View();
         }
 
@@ -58,7 +58,7 @@ namespace RTS.Areas.Admin.Controllers
                 await _itemServices.Create(item);
                 return RedirectToAction(nameof(Index));
             }
-          
+            ViewData["DeviceTypeId"] = new SelectList(_context.ItemCategories, "Id", "Type");
             return View(item);
         }
 
@@ -74,7 +74,7 @@ namespace RTS.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["DeviceTypeId"] = new SelectList(_context.itemCategories, "Id", "Type", item.DeviceTypeId);
+            ViewData["DeviceTypeId"] = new SelectList(_context.ItemCategories, "Id", "Type", item.DeviceTypeId);
             return View(item);
         }
 

@@ -10,6 +10,7 @@ namespace RTS.DataAccess.Logic.RTSEntities
     {
         [Key]
         public int Id { get; set; }
+        [Required]
         public string Type { get; set; }
         [DefaultValue("False")]
         public Boolean IsDeleted { get; set; }

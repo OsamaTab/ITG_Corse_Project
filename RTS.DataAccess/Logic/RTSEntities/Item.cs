@@ -11,15 +11,22 @@ namespace RTS.DataAccess.Logic.RTSEntities
     {
         [Key]
         public int Id { get; set; }
+        [Required]
         public int DeviceTypeId { get; set; }
 
         [ForeignKey("DeviceTypeId")]
         public ItemCategorie DeviceType { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Description { get; set; }
+        [Required]
         public string Manufacturer { get; set; }
+        [Required]
         public string Model { get; set; }
+        [Required]
         public int SerialNumber { get; set; }
+        [Required]
         public Boolean IsActive { get; set; }
         [DefaultValue("False")]
         public Boolean IsDeleted { get; set; }
@@ -27,7 +34,6 @@ namespace RTS.DataAccess.Logic.RTSEntities
 
         [ForeignKey("CurentUserId")]
         public Employee CurentUser { get; set; }
-
         public DateTime PurchaseDate { get; set; }
     }
 }

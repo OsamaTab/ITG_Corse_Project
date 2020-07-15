@@ -32,11 +32,14 @@ namespace RTS.BusinessLogic.Data
             return item.ToList();
         }
 
-        public List<Item> GetItemsByName(string search)
+        public List<Item> GetItemsByName(string? search,int? filter)
         {
             var item = from m in _context.Items.Include(i => i.CurentUser).Include(i => i.DeviceType).Where(i=>i.IsActive==true)
                        select m;
-
+            if (filter != null)
+            {
+                item = item.Where(s => s.DeviceTypeId == filter);
+            }
             if (!String.IsNullOrEmpty(search))
             {
                 item = item.Include(i => i.CurentUser).Include(i => i.DeviceType).Where(s => s.Name.Contains(search)).Where(i => i.IsActive == true);

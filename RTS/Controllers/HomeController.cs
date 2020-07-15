@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using RTS.BusinessLogic.IServices;
 using RTS.BusinessLogic.ViewModel;
@@ -36,10 +37,20 @@ namespace RTS.Controllers
             _transactionService = transactionService;
         }
 
-        public async Task<IActionResult> Index(string search)
+        public async Task<IActionResult> Index(string? search,int? filter)
         {
+            if (TempData["success"] != null)
+            {
+                ViewBag.success = TempData["success"].ToString();
+                TempData.Remove("success");
+            }
+            if (TempData["failed"] != null)
+            {
+                ViewBag.failed = TempData["failed"].ToString();
+                TempData.Remove("failed");
+            }
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var item =_itemServices.GetItemsByName(search);
+            var item =_itemServices.GetItemsByName(search,filter);
             var it = new ItemViewModel();
             it.items = item;
 
@@ -48,21 +59,18 @@ namespace RTS.Controllers
                 var userItems = _itemServices.GetItemsByUser(user);
                 it.Devices = userItems;
             }
-
-            if (TempData["status"] != null)
-            {
-                ViewBag.message = TempData["status"].ToString();
-                TempData.Remove("status");
-            }
-
+            var request = _itemRequestService.GetRequestByUser(user.Email);
+            it.Request = request;
+            ViewData["DeviceTypeId"] = new SelectList(_context.ItemCategories, "Id", "Type");
             return View(it);
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SendMail(int id, [Bind("Id,DeviceTypeId,Name,Description,Manufacturer,Model,SerialNumber,CurentUserId,IsActive,IsDeleted,PurchaseDate")] Item item)
+        public async Task<IActionResult> SendRequest(int? id)
         {
+            var item = await _context.Items.FindAsync(id);
             if (id != item.Id)
             {
                 return NotFound();
@@ -73,19 +81,12 @@ namespace RTS.Controllers
 
             if (await _userManager.IsInRoleAsync(user, "Employee") && itemUser.Email != "admin@i.com" && itemUser.Email != null&&user.Id!=itemUser.Id)
             {
-               string body=_itemRequestService.EmailText("wwwroot/Mail/Mail.html");
-               Boolean result= _itemRequestService.SendRequest(itemUser,body,item.Id);
-                if (result)
-                {
-                    var itemRequest=await _itemRequestService.Create(item.Id, itemUser.Email, user.Id ,3);
-                    await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
-
-                    TempData["status"] = "Success";
-                }
-                else
-                {
-                    TempData["status"] = "Failed";
-                }
+               string body=_itemRequestService.EmailText("wwwroot/Mail/Request.html");
+               var itemRequest=await _itemRequestService.Create(item.Id, itemUser.Email, user.Id ,2);
+               _itemRequestService.SendRequest(itemUser.Email, body,itemRequest.Id);
+               await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
+               TempData["success"] = "Email Have Been Success";
+               
             }
 
             else if(itemUser.Email == "admin@i.com"&& user.Id != itemUser.Id)
@@ -98,12 +99,12 @@ namespace RTS.Controllers
                 await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
 
 
-                TempData["status"] = "Success";
+                TempData["success"] = "Item is Added To Your Devices";
              
             }
             else
             {
-                TempData["status"] = "Failed";
+                TempData["failed"] = "Email Failed To Send";
             }
           
             return RedirectToAction(nameof(Index));
@@ -113,58 +114,91 @@ namespace RTS.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Return(int id, [Bind("Id,DeviceTypeId,Name,Description,Manufacturer,Model,SerialNumber,CurentUserId,IsActive,IsDeleted,PurchaseDate")] Item item)
+        public async Task<IActionResult> Return(int? id)
         {
+            var item = await _context.Items.FindAsync(id);
             if (id != item.Id)
             {
                 return NotFound();
             }
             var user = await _userManager.FindByNameAsync("admin@i.com");
             var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
-
             var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 4);
             await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
 
             item.CurentUserId = user.Id;
             await _itemServices.Edit(item);
-            TempData["status"] = "returned";
+            TempData["success"] = "Item Has Been Returned";
 
             return RedirectToAction(nameof(Index));
         }
 
         [Authorize]
-        public async Task<IActionResult> Approve(int? id,string userId)
+        public async Task<IActionResult> Approve(int?id ,int?model)
         {
-            var item = await _context.Items.FindAsync(id);
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
-            if (user.Id != user1.Id && userId==user1.Id )
+            var request =await _context.ItemRequests.FindAsync(id);
+            var item = await _context.Items.FindAsync(request.ItemId);
+            var user = await _userManager.FindByIdAsync(request.RequestedUserId);
+            string body = _itemRequestService.EmailText("wwwroot/Mail/Response.html");
+            if (model != null && id!=null)
             {
-                var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 1);
+                var itemRequest = await _itemRequestService.Edit(request.Id, 1);
                 await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
-
-                item.CurentUserId = user.Id;
+                item.CurentUserId = request.RequestedUserId;
+                await _itemServices.Edit(item);
+                _itemRequestService.SendResponse(user.Email, body, "Approved");
+                TempData["success"] = "Item Have been Send Successfuly";
+            }
+            else if(model==null && id != null)
+            {
+                var itemRequest = await _itemRequestService.Edit(request.Id, 1);
+                await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
+                item.CurentUserId = request.RequestedUserId;
                 await _itemServices.Edit(item);
                 ViewBag.success = "Item Have been Send Successfuly";
-
+                _itemRequestService.SendResponse(user.Email, body, "Approved");
                 return View();
+            }
+            else
+            {
+                TempData["failed"] = "Failed To approve";
             }
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Deny(int? id, string userId)
+        public async Task<IActionResult> Deny(int? id)
         {
-            var item = await _context.Items.FindAsync(id);
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var user1 = await _userManager.FindByIdAsync(item.CurentUserId);
-            if (user.Id != item.CurentUserId && userId == user1.Id)
-            {
-                var itemRequest = await _itemRequestService.Create(item.Id, user1.Email, user.Id, 3);
-                await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
-                ViewBag.denied = "Item Have been Denied";
+            var request =await _context.ItemRequests.FindAsync(id);
+            ViewBag.id = request.Id;
+            ViewBag.userId = request.RequestedUser;
+            return View(); 
+        }
 
-                return View();
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Deny(int? id, string? message,int?model)
+        {
+            var request = await _context.ItemRequests.FindAsync(id);
+            var item = await _context.Items.FindAsync(request.ItemId);
+            var user = await _userManager.FindByIdAsync(request.RequestedUserId);
+            string body = _itemRequestService.EmailText("wwwroot/Mail/Response.html");
+
+            if (model != null)
+            {
+                var itemRequest = await _itemRequestService.Edit(request.Id, 3);
+                await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
+                _itemRequestService.SendResponse(user.Email, body, "Rejected Because " + message);
+                TempData["success"] = "Your Message Have Been Send Successfuly";
+            }
+
+            else if (model==null)
+            {
+                var itemRequest = await _itemRequestService.Edit(request.Id, 3);
+                await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
+                _itemRequestService.SendResponse(user.Email, body, "Rejected Because " + message);
+                
             }
             return RedirectToAction(nameof(Index));
         }

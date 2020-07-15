@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RTS.DataAccess.Migrations
 {
-    public partial class adding_isDeleted_item : Migration
+    public partial class data : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,7 +39,8 @@ namespace RTS.DataAccess.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,7 +53,8 @@ namespace RTS.DataAccess.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<string>(nullable: true)
+                    Type = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -65,7 +67,7 @@ namespace RTS.DataAccess.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<string>(nullable: true)
+                    Status = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -185,14 +187,14 @@ namespace RTS.DataAccess.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DeviceTypeId = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    Manufacturer = table.Column<string>(nullable: true),
-                    Model = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    Manufacturer = table.Column<string>(nullable: false),
+                    Model = table.Column<string>(nullable: false),
                     SerialNumber = table.Column<int>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    CurentUserId = table.Column<string>(nullable: true),
+                    CurentUserId = table.Column<string>(nullable: false),
                     PurchaseDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -203,7 +205,7 @@ namespace RTS.DataAccess.Migrations
                         column: x => x.CurentUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Items_itemCategories_DeviceTypeId",
                         column: x => x.DeviceTypeId,
@@ -219,8 +221,8 @@ namespace RTS.DataAccess.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ItemId = table.Column<int>(nullable: false),
-                    RequestedUserId = table.Column<string>(nullable: true),
-                    ItemOwner = table.Column<string>(nullable: true),
+                    RequestedUserId = table.Column<string>(nullable: false),
+                    ItemOwner = table.Column<string>(nullable: false),
                     StatusId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -237,7 +239,8 @@ namespace RTS.DataAccess.Migrations
                         column: x => x.RequestedUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.NoAction,
+                        onUpdate:ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_itemRequests_RequestStatuses_StatusId",
                         column: x => x.StatusId,
@@ -272,25 +275,6 @@ namespace RTS.DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction,
                         onUpdate:ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "2ceb67af-72c2-4816-abf7-b981699e7222", "558d893e-5cf9-4519-a835-9c81038b5832", "Admin", "ADMIN" },
-                    { "880a526a-8c9f-43dc-beb0-0e16d56b3dac", "935509c6-6489-4fc1-9edc-85789366b83c", "Employee", "EMPLOYEE" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "RequestStatuses",
-                columns: new[] { "Id", "Status" },
-                values: new object[,]
-                {
-                    { 1, "approved" },
-                    { 2, "pending" },
-                    { 3, "rejected" }
                 });
 
             migrationBuilder.CreateIndex(

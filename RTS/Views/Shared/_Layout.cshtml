@@ -19,14 +19,17 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole("Employee")|| User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark " asp-area="admin" asp-controller="Home" asp-action="Index">Admin</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
+                            @if (User.IsInRole("Admin"))
+                            { 
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark " asp-area="admin" asp-controller="Home" asp-action="Index">Admin</a>
+                                </li>
+                            }
                         }
                     </ul>
                 </div>

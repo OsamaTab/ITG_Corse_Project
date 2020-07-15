@@ -44,22 +44,6 @@ namespace RTS.DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "126fd8e3-851c-4c27-8ac1-99704c58a06f",
-                            ConcurrencyStamp = "b51af477-dbc8-4a65-89d3-9f6f5214553a",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "c1c996ac-eef7-43f6-91a8-50db6ee84568",
-                            ConcurrencyStamp = "a5cbfa67-816a-4d9c-9854-6f7bb2dcb628",
-                            Name = "Employee",
-                            NormalizedName = "EMPLOYEE"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -249,6 +233,7 @@ namespace RTS.DataAccess.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DeviceTypeId")
@@ -261,12 +246,15 @@ namespace RTS.DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Manufacturer")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Model")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PurchaseDate")
@@ -295,6 +283,7 @@ namespace RTS.DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -340,6 +329,7 @@ namespace RTS.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -361,6 +351,11 @@ namespace RTS.DataAccess.Migrations
                         {
                             Id = 3,
                             Status = "rejected"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Status = "Returnd"
                         });
                 });
 
