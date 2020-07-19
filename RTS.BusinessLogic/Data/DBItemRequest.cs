@@ -125,14 +125,17 @@ namespace RTS.BusinessLogic.Data
             return request;
         }
 
-        public async Task<ItemRequest> Update(int requestId, string userId, int status)
+        public async Task<ItemRequest> Update(int id,  string requester, int status)
         {
-            var request = await _context.ItemRequests.FindAsync(requestId);
+            var request = await _context.ItemRequests.FindAsync(id);
             request.StatusId = status;
-            request.RequestedUserId = userId;
+            request.RequestedUserId = requester;
+            
             _context.Update(request);
             await _context.SaveChangesAsync();
             return request;
         }
+
+       
     }
 }

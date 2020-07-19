@@ -79,7 +79,7 @@ namespace RTS.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var itemUser = await _userManager.FindByIdAsync(item.CurentUserId);
 
-            if (await _userManager.IsInRoleAsync(user, "Employee") && itemUser.Email != "admin@i.com" && itemUser.Email != null&&user.Id!=itemUser.Id)
+            if (await _userManager.IsInRoleAsync(user, "Employee") &&  itemUser.Email != null&&user.Id!=itemUser.Id)
             {
                string body=_itemRequestService.EmailText("wwwroot/Mail/Request.html");
                var itemRequest=await _itemRequestService.Create(item.Id, itemUser.Email, user.Id ,2);
@@ -89,19 +89,19 @@ namespace RTS.Controllers
                
             }
 
-            else if(itemUser.Email == "admin@i.com"&& user.Id != itemUser.Id)
-            {  
-                item.CurentUserId = user.Id;
-                await _itemServices.Edit(item);
+            //else if(itemUser.Email == "admin@i.com"&& user.Id != itemUser.Id)
+            //{  
+            //    item.CurentUserId = user.Id;
+            //    await _itemServices.Edit(item);
 
-                var itemRequest= await _itemRequestService.Create(item.Id, itemUser.Email, user.Id,1);
+            //    var itemRequest= await _itemRequestService.Create(item.Id, itemUser.Email, user.Id,1);
 
-                await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
+            //    await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
 
 
-                TempData["success"] = "Item is Added To Your Devices";
+            //    TempData["success"] = "Item is Added To Your Devices";
              
-            }
+            //}
             else
             {
                 TempData["failed"] = "Email Failed To Send";
@@ -139,8 +139,10 @@ namespace RTS.Controllers
             var request =await _context.ItemRequests.FindAsync(id);
             var item = await _context.Items.FindAsync(request.ItemId);
             var user = await _userManager.FindByIdAsync(request.RequestedUserId);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            
             string body = _itemRequestService.EmailText("wwwroot/Mail/Response.html");
-            if (model != null && id!=null)
+            if (model != null && id!=null && request.StatusId==2)
             {
                 var itemRequest = await _itemRequestService.Edit(request.Id, 1);
                 await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
@@ -149,7 +151,7 @@ namespace RTS.Controllers
                 _itemRequestService.SendResponse(user.Email, body, "Approved");
                 TempData["success"] = "Item Have been Send Successfuly";
             }
-            else if(model==null && id != null)
+            else if(model==null && id != null && currentUser.Id == user.Id && request.StatusId == 2)
             {
                 var itemRequest = await _itemRequestService.Edit(request.Id, 1);
                 await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
@@ -183,9 +185,11 @@ namespace RTS.Controllers
             var request = await _context.ItemRequests.FindAsync(id);
             var item = await _context.Items.FindAsync(request.ItemId);
             var user = await _userManager.FindByIdAsync(request.RequestedUserId);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+
             string body = _itemRequestService.EmailText("wwwroot/Mail/Response.html");
 
-            if (model != null)
+            if (model != null && request.StatusId == 2)
             {
                 var itemRequest = await _itemRequestService.Edit(request.Id, 3);
                 await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);
@@ -193,7 +197,7 @@ namespace RTS.Controllers
                 TempData["success"] = "Your Message Have Been Send Successfuly";
             }
 
-            else if (model==null)
+            else if (model==null && currentUser.Id == user.Id && request.StatusId == 2)
             {
                 var itemRequest = await _itemRequestService.Edit(request.Id, 3);
                 await _transactionService.Create(itemRequest.Id, item.DeviceTypeId, DateTime.Now);

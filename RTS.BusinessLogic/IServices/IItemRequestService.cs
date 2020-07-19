@@ -17,6 +17,8 @@ namespace RTS.BusinessLogic.IServices
         public string EmailText(string path);
         public Task<ItemRequest> Create(int id, string owner, string requester, int status);
         public Task<ItemRequest> Edit(int requestId, int status);
+        public Task<ItemRequest> Update(int id,  string requester, int status);
+
 
 
     }
