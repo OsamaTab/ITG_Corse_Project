@@ -19,11 +19,11 @@ namespace RTS.Areas.Admin.Controllers
             _transactionService = transectionService;
             _context = context;
         }
-        public async Task<IActionResult> Index(string? search,int? filter)
+        public async Task<IActionResult> Index(string? search,int? filter,DateTime? startDate,DateTime? endDate)
         {
             ViewData["StatusId"] = new SelectList(_context.RequestStatuses, "Id", "Status");
 
-            var model =_transactionService.GetTransections(search,filter);
+            var model =_transactionService.GetTransections(search,filter,startDate,endDate);
             return View(model);
         }
     }

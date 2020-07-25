@@ -53,6 +53,7 @@ namespace RTS.Controllers
             var item =_itemServices.GetItemsByName(search,filter);
             var it = new ItemViewModel();
             it.items = item;
+            ViewBag.Email = user.Email;
 
             if (user != null)
             {

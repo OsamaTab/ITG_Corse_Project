@@ -33,7 +33,7 @@ namespace RTS.BusinessLogic.Data
             return transaction;
         }
 
-        public List<Trnasaction> GetTransections(string? search ,int? filter)
+        public List<Trnasaction> GetTransections(string? search ,int? filter,DateTime? startDate,DateTime? endDate)
         {
             var trnasactions = from m in _context.Trnasactions.Include(t => t.Item.Item).Include(d => d.DeviceType).Include(t => t.Item.RequestedUser).Include(t => t.Item.Status)
                        select m;
@@ -42,9 +42,13 @@ namespace RTS.BusinessLogic.Data
             {
                 trnasactions = trnasactions.Where(s=>s.Item.StatusId==filter);
             }
-            if (!String.IsNullOrEmpty(search))
+            else if (!String.IsNullOrEmpty(search))
             {
                 trnasactions = trnasactions.Where(s => s.Item.Item.Name.Contains(search));
+            }
+            else if(startDate!=null && endDate != null)
+            {
+                trnasactions = trnasactions.Where(x => x.TransectionDate.Date >= startDate && x.TransectionDate.Date <= endDate);
             }
 
             return trnasactions.OrderByDescending(x=>x.TransectionDate).ToList();

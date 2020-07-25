@@ -170,42 +170,49 @@
                         @foreach (var item in Model.items)
                         {
 
-                            <tr>
-                                <td></td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.DeviceType.Type)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Description)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Manufacturer)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Model)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SerialNumber)
-                                </td>
+                        <tr>
+                            <td></td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DeviceType.Type)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Manufacturer)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Model)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SerialNumber)
+                            </td>
 
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CurentUser.UserName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PurchaseDate)
+                            </td>
+                            @if (User.IsInRole("Employee") && @ViewBag.Email != item.CurentUser.Email)
+                            {
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.CurentUser.UserName)
+                                    <form class="d-inline-flex" asp-action="SendRequest" asp-route-id="@item.Id">
+                                        <input type="submit" value="Request" class="btn btn-primary" />
+                                    </form>
                                 </td>
+                            }
+                            else if (User.IsInRole("Employee") && @ViewBag.Email == item.CurentUser.Email)
+                            {
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.PurchaseDate)
+
+                                    <button class="btn btn-success">You Have The Item</button>
                                 </td>
-                                @if (User.IsInRole("Employee"))
-                                {
-                                    <td>
-                                        <form class="d-inline-flex" asp-action="SendRequest" asp-route-id="@item.Id">
-                                            <input type="submit" value="Request" class="btn btn-primary" />
-                                        </form>
-                                    </td>
-                                }
-                            </tr>
+                            }
+                        </tr>
                         }
                     </tbody>
                 </table>

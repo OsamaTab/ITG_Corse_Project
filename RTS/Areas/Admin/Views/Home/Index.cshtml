@@ -17,6 +17,13 @@
                         <input class="ml-2 btn btn-primary" type="submit" value="Search" />
                     </p>
                 </form>
+                <form asp-controller="Home" asp-action="Index">
+                    <p class="row">
+                        <input class="form-control col-4 mr-1" type="datetime" name="startDate" placeholder="Search By Start Date">
+                        <input class="form-control col-4" type="datetime" name="endDate" placeholder="Search By End Date">
+                        <input class="ml-2 btn btn-primary" type="submit" value="Search" />
+                    </p>
+                </form>
                 <form asp-controller="Home" asp-action="Index" id="filterForm" class="col-md-4">
                     <div class="form-group m-0 ">
                         <select id="Statusfilter" name="filter" class="form-control" asp-items="ViewBag.StatusId">
